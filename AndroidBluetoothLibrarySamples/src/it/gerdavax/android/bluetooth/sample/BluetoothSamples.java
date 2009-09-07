@@ -17,12 +17,16 @@
  */
 package it.gerdavax.android.bluetooth.sample;
 
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,7 +37,7 @@ public class BluetoothSamples extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+ 
 		setContentView(R.layout.main);
 
 		Button button = (Button) findViewById(R.id.bluetoothButton);
@@ -95,6 +99,7 @@ public class BluetoothSamples extends Activity {
 		});
 		
 		showDialog(this, R.string.splash);
+		
 	}
 
 	public static void showDialog(Context context, int text) {

@@ -24,6 +24,7 @@ import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
 import it.gerdavax.android.bluetooth.BluetoothSocket;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -155,6 +156,16 @@ public class GPSSample extends ListActivity {
 			//startActivity(intent);
 		}
 
+		public void gotServiceChannel(int serviceID, int channel) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void serviceChannelNotAvailable(int serviceID) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	@Override
@@ -229,13 +240,15 @@ public class GPSSample extends ListActivity {
 		System.out.println("PAUSE");
 		
 		localBluetoothDevice.close(this);
+		
+		/*
 		if (t != null) {
 			t.halt = true;
 		}
 		
 		if (t2 != null) {
 			t2.halt = true;
-		}
+		}*/
 	}
 
 	private void pair(String address) {
@@ -256,9 +269,10 @@ public class GPSSample extends ListActivity {
 					BluetoothSocket socket = device.openSocket(port);
 
 					InputStream input = socket.getInputStream();
+					OutputStream output = socket.getOutputStream();
+					output.write("TEST".getBytes());
 
-
-					byte[] buffer = new byte[8192];
+					byte[] buffer = new byte[256];
 					int read;
 					while ((read = input.read(buffer)) != -1 && !halt) {
 						String string = new String(buffer, 0, read);
