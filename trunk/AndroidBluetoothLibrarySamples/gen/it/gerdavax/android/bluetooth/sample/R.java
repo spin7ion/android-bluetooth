@@ -15,7 +15,7 @@ public final class R {
     }
     public static final class id {
         public static final int aboutButton=0x7f050011;
-        public static final int address=0x7f050005;
+        public static final int address=0x7f050006;
         public static final int arduinoButton=0x7f05000f;
         public static final int bluetoothButton=0x7f05000c;
         public static final int bluetoothServiceButton=0x7f050001;
@@ -28,7 +28,7 @@ public final class R {
         public static final int localDeviceCompany=0x7f05000b;
         public static final int localDeviceFriendlyName=0x7f050009;
         public static final int localDeviceManufacturer=0x7f05000a;
-        public static final int name=0x7f050006;
+        public static final int name=0x7f050005;
         public static final int programItem=0x7f050004;
         public static final int status=0x7f050000;
         public static final int text=0x7f050003;
