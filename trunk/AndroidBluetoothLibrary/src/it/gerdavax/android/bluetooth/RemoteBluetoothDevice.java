@@ -21,7 +21,8 @@ package it.gerdavax.android.bluetooth;
  * <p>
  * Interface for managing a remote Bluetooth device and RFComm connections.
  * RemoteBluetoothDevice instances are created and managed by the unique
- * LocalBluetoothDevice instance.</p>
+ * LocalBluetoothDevice instance.
+ * </p>
  * 
  * <p>
  * Device name, address and class can be retrieved without connecting to the
@@ -37,24 +38,16 @@ package it.gerdavax.android.bluetooth;
  * listener will get a <code>paired()</code> event that notifies that device is
  * connected and that BluetoothSocket instances can be created.
  * </p>
+ * 
  * @author Stefano Sanna - gerdavax@gmail.com - http://www.gerdavax.it
  * 
  */
-public interface RemoteBluetoothDevice {
-
-	/**
-	 * Gets the friendly name associated to this Bluetooth device. Friendly name
-	 * could be not immediately retrieved by the Bluetooth service when the
-	 * remote device is discovered
-	 * 
-	 * @return the friendly name of the device
-	 */
-	public String getName();
+public interface RemoteBluetoothDevice extends BluetoothDevice {
 
 	/**
 	 * Gets the BD Address of this device.
 	 * 
-	 * @return
+	 * @return the BD Address
 	 */
 	public String getAddress();
 
@@ -64,7 +57,7 @@ public interface RemoteBluetoothDevice {
 	 * 
 	 * @return
 	 */
-	public String getRSSI();
+	public short getRSSI();
 
 	/**
 	 * Gets the device class (see Bluetooth Protocol Specification)
@@ -73,6 +66,27 @@ public interface RemoteBluetoothDevice {
 	 */
 	public int getDeviceClass();
 
+	/**
+	 * Gets the device major class (see Bluetooth Protocol Specification)
+	 * @return device major class
+	 * @since 0.2
+	 */
+	public int getDeviceMajorClass();
+	
+	/**
+	 * Gets the device minor class (see Bluetooth Protocol Specification)
+	 * @return device minor class
+	 * @since 0.2
+	 */
+	public int getDeviceMinorClass();
+	
+	/**
+	 * Gets the service major class of this device (see Bluetooth Protocol Specification)
+	 * @return service major class
+	 * @since 0.2
+	 */
+	public int getServiceMajorClass();
+	
 	/**
 	 * Sets a default PIN for the pairing
 	 * 
@@ -116,4 +130,18 @@ public interface RemoteBluetoothDevice {
 	 * @see RemoteBluetoothDeviceListener
 	 */
 	public void setListener(RemoteBluetoothDeviceListener listener);
+	
+	/**
+	 * 
+	 * @param uuid16
+	 * @throws Exception
+	 * @since 0.2
+	 */
+	public void getRemoteServiceChannel(int uuid16) throws Exception;
+	
+	/**
+	 * 
+	 * @since 0.3
+	 */
+	//public void bind(int channel) throws Exception;
 }

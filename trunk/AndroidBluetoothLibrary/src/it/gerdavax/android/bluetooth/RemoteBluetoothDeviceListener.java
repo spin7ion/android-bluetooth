@@ -40,4 +40,22 @@ public interface RemoteBluetoothDeviceListener {
 	 * 
 	 */
 	public void pinRequested();
+
+	/**
+	 * Called when requested service is supported by the device and channel
+	 * number has been retrieved
+	 * 
+	 * @param serviceID
+	 * @param channel
+	 * @since 0.2
+	 */
+	public void gotServiceChannel(int serviceID, int channel);
+
+	/**
+	 * Called when requested service is not supported by this device
+	 * 
+	 * @param serviceID
+	 * @since 0.2
+	 */
+	public void serviceChannelNotAvailable(int serviceID);
 }
