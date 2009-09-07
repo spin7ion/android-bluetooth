@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<Button android:id="@+id/bluetoothButton" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:textSize="24sp"
+		android:fadingEdge="vertical" android:layout_weight="1"
+		android:text="Bluetooth Service" />
+	<Button android:id="@+id/localDeviceButton"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:textSize="24sp" android:fadingEdge="vertical"
+		android:layout_weight="1" android:text="Local Bluetooth Device" />
+	<Button android:id="@+id/deviceScanButton"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:textSize="24sp" android:fadingEdge="vertical"
+		android:layout_weight="1" android:text="Device Discovery" />
+	<Button android:id="@+id/arduinoButton"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:textSize="24sp" android:fadingEdge="vertical"
+		android:layout_weight="1" android:text="Arduino Bluetooth" />
+	<Button android:id="@+id/gpsButton"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:textSize="24sp" android:fadingEdge="vertical"
+		android:layout_weight="1" android:text="GPS RFCOMM" />
+	<Button android:id="@+id/aboutButton"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:textSize="24sp" android:fadingEdge="vertical"
+		android:layout_weight="1" android:text="About" />
+</LinearLayout>
