@@ -45,6 +45,12 @@ public interface BluetoothSocket {
 	 */
 	public int getPort() throws Exception;
 	
+	/**
+	 * Gets the InputStream
+	 * 
+	 * @return the InputStream of this socket
+	 * @throws Exception
+	 */
 	public InputStream getInputStream() throws Exception;
 
 	public OutputStream getOutputStream() throws Exception;
@@ -54,5 +60,5 @@ public interface BluetoothSocket {
 	 *
 	 * @throws Exception
 	 */
-	public void close() throws Exception;
+	public void closeSocket() throws Exception;
 }
