@@ -2,7 +2,12 @@
 
 = Initialization =
 
-TO BE ADDED
+Don't forget to add following permissions to the AndroidManifest.xml of your application:
+
+{{{
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+}}}
 
 
 = Bluetooth enable/disable =
