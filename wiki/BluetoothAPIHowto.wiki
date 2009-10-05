@@ -2,7 +2,7 @@
 
 = Initialization =
 
-Don't forget to add following permissions to the 'AndroidManifest.xml' of your application:
+Don't forget to add following permissions to the AndroidManifest of your application:
 
 {{{
 <uses-permission android:name="android.permission.BLUETOOTH"/>
