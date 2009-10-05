@@ -29,6 +29,12 @@ protected void onDestroy() {
 }
 }}}
 
+
 = Bluetooth enable/disable =
+
+TO BE ADDED
+
+
+= Bluetooth device discovery =
 
 TO BE ADDED
