@@ -1,0 +1,10 @@
+#summary This page will contain code snippets to show how to use the Bluetooth API for Android.
+
+= Initialization =
+
+TO BE ADDED
+
+
+= Bluetooth enable/disable =
+
+TO BE ADDED
