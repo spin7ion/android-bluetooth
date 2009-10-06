@@ -17,7 +17,7 @@ LocalBluetoothDevice localBT = LocalBluetoothDevice.initLocalDevice(_context);
 }}}
 
 
-LocalBluetoothDevice *must* be closed before leaving the activity. The best is to close it in the onDestroy() callback:
+`LocalBluetoothDevice` *must* be closed before leaving the activity. The best is to close it in the onDestroy() callback:
 
 {{{
 @Override
