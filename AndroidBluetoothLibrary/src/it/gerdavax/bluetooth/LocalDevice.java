@@ -1,5 +1,6 @@
 package it.gerdavax.bluetooth;
 
+import it.gerdavax.android.bluetooth.util.PlatformChecker;
 import android.content.Context;
 
 public abstract class LocalDevice {
@@ -7,14 +8,8 @@ public abstract class LocalDevice {
 	protected ScanListener scanListener = null;
 	private static final int SDK_NUM_2_0 = 5;
 	public static LocalDevice getInstance() {
-		String vName = android.os.Build.VERSION.SDK;
 		LocalDevice toRet = null;
-		int vInt = SDK_NUM_2_0;// 2.0 by default
-		try {
-			vInt = Integer.parseInt(vName.trim());
-		} catch (RuntimeException e) {
-			//no op
-		}
+		int vInt = PlatformChecker.getVersionNumber();
 		if (vInt < SDK_NUM_2_0) {
 			toRet = new it.gerdavax.bluetooth.android1.LocalDevice1Impl();
 		} else {
@@ -23,25 +18,25 @@ public abstract class LocalDevice {
 		return toRet;
 	}
 
-	public final void init(final Context _ctx) {
+	public final void init(final Context _ctx)  throws Exception {
 		ctx = _ctx;
 		doInit();
 	}
 
 	public final void destroy() {
-		ctx = null;
 		doDestroy();
+		ctx = null;
 	}
 
 
-	public final void scan(final ScanListener listener) {
+	public final void scan(final ScanListener listener)  throws Exception{
 		scanListener = listener;
 		doScan();
 	}
 
-	public abstract void doInit();
+	protected abstract void doInit() throws Exception;
 
-	public abstract void doScan();
+	protected abstract void doScan() throws Exception;
 	
-	public abstract void doDestroy();
+	protected abstract void doDestroy();
 }

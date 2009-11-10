@@ -1,40 +1,48 @@
 package it.gerdavax.bluetooth.android1;
 
+import java.util.ArrayList;
+
+import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
+import it.gerdavax.android.bluetooth.LocalBluetoothDeviceListener;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 
 public class LocalDevice1Impl extends it.gerdavax.bluetooth.LocalDevice {
-	private final BroadcastReceiver receiver = new BroadcastReceiver() {
+	private LocalBluetoothDevice local = null;
+	private LocalBluetoothDeviceListener localListener = new LocalBluetoothDeviceListener() {
+		
 		@Override
-		public void onReceive(Context ctx, Intent intent) {
-			final String action = intent.getAction();
-			if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-				RemoteBluetoothDevice rbd = (RemoteBluetoothDevice)intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				RemoteDevice1Impl tobounce = new RemoteDevice1Impl(rbd);
-				scanListener.deviceFound(tobounce);
-			} else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
-				scanListener.scanCompleted();
-			}
+		public void scanStarted() {}
+		
+		@Override
+		public void scanCompleted(ArrayList<String> devices) {
+			scanListener.scanCompleted();
 		}
+		
+		@Override
+		public void deviceFound(String deviceAddress) {
+			RemoteBluetoothDevice rbd = local.getRemoteBluetoothDevice(deviceAddress);
+			scanListener.deviceFound(new RemoteDevice1Impl(rbd));
+		}
+		
+		@Override
+		public void bluetoothEnabled() {}
+		
+		@Override
+		public void bluetoothDisabled() {}
 	};
-	
 	@Override
 	public void doDestroy() {
-		ctx = null;
+		local.close();
 	}
 
 	@Override
-	public void doInit() {
-		// nop
+	public void doInit() throws Exception {
+		local = LocalBluetoothDevice.initLocalDevice(ctx);
 	}
 
 	@Override
-	public void doScan() {
-		ctx.registerReceiver(receiver, null);
-		BluetoothAdapter.getDefaultAdapter().startDiscovery();
+	public void doScan() throws Exception {
+		local.setListener(localListener);
+		local.scan();
 	}
 }

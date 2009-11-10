@@ -25,16 +25,21 @@ public class PlatformChecker {
 	private static final int ANDROID_1_1 = 2;
 	private static final int ANDROID_1_5 = 3;
 	private static final int ANDROID_1_6 = 4;
+	private static final int ANDROID_2_0 = 4;
 	private static final String TAG = "BluetoothAPI";
 	
 	private PlatformChecker() {
 		
 	}
 	
+	public static int getVersionNumber() {
+		return Integer.parseInt(Build.VERSION.SDK.trim());
+	}
+	
 	public static boolean isThisPlatformSupported() {
 		printPlatformDescription();
 		
-		int platform = Integer.parseInt(Build.VERSION.SDK);
+		int platform = getVersionNumber();
 		
 		boolean supported = false;
 		
