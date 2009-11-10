@@ -21,7 +21,7 @@ package it.gerdavax.android.bluetooth;
  * This interface define common methods and Bluetooth constants for local and
  * remote Bluetooth devices.
  * 
- * @author Stefano Sanna - gerdavax@gmail.com
+ * @author Stefano Sanna - gerdavax@gmail.com - http://www.gerdavax.it
  * @since 0.2
  */
 public interface BluetoothDevice {
@@ -114,7 +114,7 @@ public interface BluetoothDevice {
 	 * @return the friendly name of the device
 	 * @since 0.2
 	 */
-	public String getName();
+	public String getName() throws BluetoothException;
 
 	/**
 	 * Gets the BD Address of this device.
@@ -122,6 +122,6 @@ public interface BluetoothDevice {
 	 * @return the BD Address
 	 * @since 0.2
 	 */
-	public String getAddress() throws Exception;
+	public String getAddress() throws BluetoothException;
 
 }

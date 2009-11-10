@@ -18,29 +18,74 @@
 package it.gerdavax.android.bluetooth.util;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ReflectionUtils {
-	
+
 	private ReflectionUtils() {
+
+	}
+
+	public static int readStaticConstantValue(Class myClass, String fieldName) throws Exception {
+		Field field = myClass.getField(fieldName);
+		return field.getInt(null);
+	}
+
+	public static void printMethods(String myClassName) {
+		try {
+			printMethods(Class.forName(myClassName));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
 		
 	}
 	
+	/*** SCUOTING METHODS ***/
 	public static void printMethods(Class myClass) {
-    	Constructor[] constructors = myClass.getConstructors();
-    	
-    	for (int i = 0; i < constructors.length; i++) {
-    		System.out.println(constructors[i].toString());
-    	}
-    	
-    	Method[] methods = myClass.getMethods();
-    	
-    	for (int i = 0; i < methods.length; i++) {
-    		System.out.println(methods[i].toString());
-    	}
-    }
-	
-	public static void explorePackage(Class myClass) {
-		
+		System.out.println("\n*** METHODS OF " + myClass.toString());
+
+		try {
+			Constructor[] constructors = myClass.getConstructors();
+
+			for (int i = 0; i < constructors.length; i++) {
+				System.out.println(constructors[i].toString());
+			}
+
+			Method[] methods = myClass.getMethods();
+
+			for (int i = 0; i < methods.length; i++) {
+				System.out.println(methods[i].toString());
+			}
+		} catch (Throwable t) {
+			System.out.println("\n*** Can't print METHODS OF " + myClass.toString());
+		}
 	}
+
+	public static void printFields(Class myClass) {
+		System.out.println("\n*** FIELDS OF " + myClass.toString());
+		Field[] fields = myClass.getFields();
+
+		for (int i = 0; i < fields.length; i++) {
+			System.out.println(fields[i].toString());
+		}
+	}
+
+	public static void readField(Class myClass, String fieldName) {
+		try {
+			Field field = myClass.getField("SCAN_MODE_CONNECTABLE");
+			System.out.println("SCAN_MODE_CONNECTABLE VALUE: " + field.getInt(null));
+
+			field = myClass.getField("SCAN_MODE_CONNECTABLE_DISCOVERABLE");
+			System.out.println("SCAN_MODE_CONNECTABLE_DISCOVERABLE VALUE: " + field.getInt(null));
+
+			field = myClass.getField("SCAN_MODE_NONE");
+			System.out.println("SCAN_MODE_NONE VALUE: " + field.getInt(null));
+		} catch (Exception e) {
+
+		}
+
+	}
+
 }
