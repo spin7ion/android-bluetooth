@@ -1,26 +1,27 @@
 package it.gerdavax.bluetooth.android2;
 
-import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
+import android.bluetooth.BluetoothDevice;
+
 
 class RemoteDevice2Impl implements it.gerdavax.bluetooth.RemoteDevice {
-	private RemoteBluetoothDevice rbd = null;
+	private BluetoothDevice bd = null;
 	
-	public RemoteDevice2Impl(RemoteBluetoothDevice _rbd) {
+	public RemoteDevice2Impl(BluetoothDevice _rbd) {
 		super();
-		this.rbd = _rbd;
+		this.bd = _rbd;
 	}
 	
 	/* (non-Javadoc)
 	 * @see it.gerdavax.bluetooth.RemoteInterface#getFriendlyName()
 	 */
 	public String getFriendlyName() {
-		return rbd.getName();
+		return bd.getName();
 	}
 	
 	/* (non-Javadoc)
 	 * @see it.gerdavax.bluetooth.RemoteInterface#getAddress()
 	 */
 	public String getAddress() {
-		return rbd.getAddress();
+		return bd.getAddress();
 	}
 }

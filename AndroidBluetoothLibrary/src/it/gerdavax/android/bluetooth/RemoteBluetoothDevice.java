@@ -92,7 +92,7 @@ public interface RemoteBluetoothDevice extends BluetoothDevice {
 	 * 
 	 * @param pin
 	 */
-	public void setPin(String pin);
+	public void setPin(String pin) throws BluetoothException;
 
 	/**
 	 * Attempts to pair this remote device.
@@ -107,6 +107,13 @@ public interface RemoteBluetoothDevice extends BluetoothDevice {
 	public void pair(String pin);
 
 	/**
+	 * Unpair this remote device
+	 * 
+	 * @since 0.3
+	 */
+	public void unpair();
+	
+	/**
 	 * Gets the paired status of this device
 	 * 
 	 * @return true if this device is paired
@@ -119,9 +126,9 @@ public interface RemoteBluetoothDevice extends BluetoothDevice {
 	 * 
 	 * @param port
 	 * @return BluetoothSocket instance associated to given port
-	 * @throws Exception
+	 * @throws BluetoothException
 	 */
-	public BluetoothSocket openSocket(int port) throws Exception;
+	public BluetoothSocket openSocket(int port) throws BluetoothException;
 
 	/**
 	 * Sets the listener for events coming from this RemoteBluetoothDevice
@@ -139,9 +146,4 @@ public interface RemoteBluetoothDevice extends BluetoothDevice {
 	 */
 	public void getRemoteServiceChannel(int uuid16) throws Exception;
 	
-	/**
-	 * 
-	 * @since 0.3
-	 */
-	//public void bind(int channel) throws Exception;
 }
