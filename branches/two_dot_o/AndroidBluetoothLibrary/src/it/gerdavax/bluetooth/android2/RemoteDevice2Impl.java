@@ -1,5 +1,10 @@
 package it.gerdavax.bluetooth.android2;
 
+import it.gerdavax.bluetooth.BtSocket;
+
+import java.io.IOException;
+import java.util.UUID;
+
 import android.bluetooth.BluetoothDevice;
 
 
@@ -23,5 +28,10 @@ class RemoteDevice2Impl implements it.gerdavax.bluetooth.RemoteDevice {
 	 */
 	public String getAddress() {
 		return bd.getAddress();
+	}
+
+	@Override
+	public BtSocket openSocket(UUID serviceId) throws IOException {
+		return new BtSocket2Impl(bd.createRfcommSocketToServiceRecord(serviceId) );
 	}
 }
