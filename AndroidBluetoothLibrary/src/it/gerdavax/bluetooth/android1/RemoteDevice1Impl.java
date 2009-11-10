@@ -1,6 +1,7 @@
 package it.gerdavax.bluetooth.android1;
 
 import it.gerdavax.android.bluetooth.BluetoothException;
+import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
 import it.gerdavax.bluetooth.BtSocket;
@@ -52,8 +53,7 @@ class RemoteDevice1Impl implements RemoteDevice {
 			
 			@Override
 			public void pinRequested() {
-				// TODO Auto-generated method stub
-				
+				LocalBluetoothDevice.getLocalDevice().showDefaultPinInputActivity(getAddress(), true);
 			}
 			
 			@Override
@@ -66,7 +66,6 @@ class RemoteDevice1Impl implements RemoteDevice {
 			public void gotServiceChannel(int serviceID, int channel) {
 				port = channel;
 				lock.notify();
-				
 			}
 		};
 		PortDiscoverer discoverer = new PortDiscoverer();
