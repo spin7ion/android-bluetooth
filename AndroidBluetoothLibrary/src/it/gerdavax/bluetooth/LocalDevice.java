@@ -18,25 +18,16 @@ public abstract class LocalDevice {
 		return toRet;
 	}
 
-	public final void init(final Context _ctx)  throws Exception {
+	public void init(final Context _ctx)  throws Exception {
 		ctx = _ctx;
-		doInit();
 	}
 
-	public final void destroy() {
-		doDestroy();
+	public void destroy() {
 		ctx = null;
 	}
 
 
-	public final void scan(final ScanListener listener)  throws Exception{
+	public void scan(final ScanListener listener)  throws Exception{
 		scanListener = listener;
-		doScan();
 	}
-
-	protected abstract void doInit() throws Exception;
-
-	protected abstract void doScan() throws Exception;
-	
-	protected abstract void doDestroy();
 }
