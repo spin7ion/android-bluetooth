@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import it.gerdavax.bluetooth.ScanListener;
 
 public class LocalDevice2Impl extends it.gerdavax.bluetooth.LocalDevice {
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -22,17 +23,19 @@ public class LocalDevice2Impl extends it.gerdavax.bluetooth.LocalDevice {
 	};
 	
 	@Override
-	public void doDestroy() {
+	public void destroy() {
 		ctx = null;
+		super.destroy();
 	}
 
 	@Override
-	public void doInit() {
-		// nop
+	public void init(Context _ctx) throws Exception {
+		super.init(_ctx);
 	}
 
 	@Override
-	public void doScan() {
+	public void scan(ScanListener listener) throws Exception {
+		super.scan(listener);
 		ctx.registerReceiver(receiver, null);
 		BluetoothAdapter.getDefaultAdapter().startDiscovery();
 	}

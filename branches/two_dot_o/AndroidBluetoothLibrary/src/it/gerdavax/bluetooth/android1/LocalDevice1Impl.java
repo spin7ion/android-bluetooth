@@ -2,9 +2,12 @@ package it.gerdavax.bluetooth.android1;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.LocalBluetoothDeviceListener;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
+import it.gerdavax.bluetooth.ScanListener;
 
 public class LocalDevice1Impl extends it.gerdavax.bluetooth.LocalDevice {
 	private LocalBluetoothDevice local = null;
@@ -31,17 +34,20 @@ public class LocalDevice1Impl extends it.gerdavax.bluetooth.LocalDevice {
 		public void bluetoothDisabled() {}
 	};
 	@Override
-	public void doDestroy() {
+	public void destroy() {
 		local.close();
+		super.destroy();
 	}
 
 	@Override
-	public void doInit() throws Exception {
+	public void init(Context _ctx) throws Exception {
+		super.init(_ctx);
 		local = LocalBluetoothDevice.initLocalDevice(ctx);
 	}
 
 	@Override
-	public void doScan() throws Exception {
+	public void scan(ScanListener listener) throws Exception {
+		super.scan(listener);
 		local.setListener(localListener);
 		local.scan();
 	}
