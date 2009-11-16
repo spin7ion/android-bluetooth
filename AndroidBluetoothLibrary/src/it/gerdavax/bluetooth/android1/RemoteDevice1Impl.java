@@ -12,13 +12,13 @@ import java.util.UUID;
 class RemoteDevice1Impl implements RemoteDevice {
 	private RemoteBluetoothDevice rbd = null;
 
-	public RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {
+	RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {
 		super();
 		this.rbd = _rbd;
 	}
 
 	/*
-	 *
+	 * 
 	 * 
 	 * @see it.gerdavax.bluetooth.RemoteInterface#getFriendlyName()
 	 */
@@ -43,25 +43,26 @@ class RemoteDevice1Impl implements RemoteDevice {
 	public BtSocket openSocket(UUID serviceId) throws Exception {
 		int uuid16 = (int) serviceId.getLeastSignificantBits();
 		final Object lock = new Object();
-		class PortDiscoverer implements RemoteBluetoothDeviceListener{
+		class PortDiscoverer implements RemoteBluetoothDeviceListener {
 			int port;
+
 			@Override
 			public void serviceChannelNotAvailable(int serviceID) {
 				port = 1;
 				lock.notify();
 			}
-			
+
 			@Override
 			public void pinRequested() {
 				LocalBluetoothDevice.getLocalDevice().showDefaultPinInputActivity(getAddress(), true);
 			}
-			
+
 			@Override
 			public void paired() {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void gotServiceChannel(int serviceID, int channel) {
 				port = channel;
@@ -69,11 +70,16 @@ class RemoteDevice1Impl implements RemoteDevice {
 			}
 		};
 		PortDiscoverer discoverer = new PortDiscoverer();
-		rbd.setListener(discoverer );
+		rbd.setListener(discoverer);
 		rbd.getRemoteServiceChannel(uuid16);
 		try {
-		lock.wait();
-		} catch (InterruptedException ie) {}
+			lock.wait();
+		} catch (InterruptedException ie) {
+		}
 		return new BtSocket1Impl(rbd.openSocket(discoverer.port));
+	}
+
+	public int getRSSI() {
+		return (int)rbd.getRSSI();
 	}
 }
