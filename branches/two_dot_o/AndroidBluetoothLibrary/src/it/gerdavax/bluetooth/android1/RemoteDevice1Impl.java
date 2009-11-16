@@ -68,7 +68,8 @@ class RemoteDevice1Impl implements RemoteDevice {
 				port = channel;
 				lock.notify();
 			}
-		};
+		}
+		;
 		PortDiscoverer discoverer = new PortDiscoverer();
 		rbd.setListener(discoverer);
 		rbd.getRemoteServiceChannel(uuid16);
@@ -80,6 +81,6 @@ class RemoteDevice1Impl implements RemoteDevice {
 	}
 
 	public int getRSSI() {
-		return (int)rbd.getRSSI();
+		return (int) rbd.getRSSI();
 	}
 }
