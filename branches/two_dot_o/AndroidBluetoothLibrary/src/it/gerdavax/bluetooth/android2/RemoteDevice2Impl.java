@@ -10,10 +10,12 @@ import android.bluetooth.BluetoothDevice;
 
 class RemoteDevice2Impl implements it.gerdavax.bluetooth.RemoteDevice {
 	private BluetoothDevice bd = null;
+	private int rssi = -1;
 	
-	public RemoteDevice2Impl(BluetoothDevice _rbd) {
+	RemoteDevice2Impl(BluetoothDevice _rbd, int _rssi) {
 		super();
 		this.bd = _rbd;
+		rssi = _rssi;
 	}
 	
 	/* (non-Javadoc)
@@ -32,6 +34,11 @@ class RemoteDevice2Impl implements it.gerdavax.bluetooth.RemoteDevice {
 
 	@Override
 	public BtSocket openSocket(UUID serviceId) throws IOException {
-		return new BtSocket2Impl(bd.createRfcommSocketToServiceRecord(serviceId) );
+		BtSocket socket = new BtSocket2Impl(bd.createRfcommSocketToServiceRecord(serviceId) );
+		return socket;
+	}
+	
+	public int getRSSI() {
+		return rssi;
 	}
 }
