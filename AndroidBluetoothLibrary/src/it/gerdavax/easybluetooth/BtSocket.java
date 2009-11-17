@@ -11,5 +11,5 @@ public interface BtSocket {
 	
 	public OutputStream getOutputStream() throws Exception;
 	
-	public void close() throws IOException;
+	public void close() throws Exception;
 }	
