@@ -16,7 +16,7 @@ class BtSocket1Impl implements BtSocket {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws IOException {
 		socket.closeSocket();
 	}
 

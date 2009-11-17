@@ -21,12 +21,14 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		public void scanCompleted(ArrayList<String> devices) {
 			scanListener.scanCompleted();
 		}
-
+		
+		@Override
 		public void deviceFound(String deviceAddress) {
 			RemoteBluetoothDevice rbd = local.getRemoteBluetoothDevice(deviceAddress);
 			scanListener.deviceFound(new RemoteDevice1Impl(rbd));
 		}
-
+		
+		@Override
 		public void bluetoothEnabled() {
 			try {
 				local.scan();
@@ -34,27 +36,14 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 				e.printStackTrace();
 			}
 		}
-
-		public void enabled() {
-			try {
-				local.scan();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		public void bluetoothDisabled() {
-		}
-
 		@Override
-		public void disabled() {
-			// TODO Auto-generated method stub
+		public void bluetoothDisabled() {
 		}
 	};
 
 	@Override
 	public void destroy() {
-		local.close(ctx);
+		local.close();
 		super.destroy();
 	}
 

@@ -15,12 +15,7 @@ class RemoteDevice1Impl implements RemoteDevice {
 		super();
 		this.rbd = _rbd;
 	}
-
-	/*
-	 * 
-	 * 
-	 * @see it.gerdavax.bluetooth.RemoteInterface#getFriendlyName()
-	 */
+	
 	public String getFriendlyName() {
 		try {
 			return rbd.getName();
