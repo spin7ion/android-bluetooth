@@ -15,8 +15,7 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 	private LocalBluetoothDeviceListener localListener = new LocalBluetoothDeviceListener() {
 
 		@Override
-		public void scanStarted() {
-		}
+		public void scanStarted() {}
 
 		@Override
 		public void scanCompleted(ArrayList<String> devices) {
