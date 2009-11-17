@@ -1,6 +1,5 @@
 package it.gerdavax.easybluetooth.android1;
 
-import it.gerdavax.android.bluetooth.BluetoothException;
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
@@ -25,7 +24,7 @@ class RemoteDevice1Impl implements RemoteDevice {
 	public String getFriendlyName() {
 		try {
 			return rbd.getName();
-		} catch (BluetoothException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
