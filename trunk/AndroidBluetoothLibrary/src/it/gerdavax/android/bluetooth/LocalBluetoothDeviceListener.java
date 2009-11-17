@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Interface definition for a callback to be invoked when an event happens on
  * the LocalBluetoothDevice.
  * 
- * @author Stefano Sanna - gerdavax@gmail.com
+ * @author Stefano Sanna - gerdavax@gmail.com - http://www.gerdavax.it
  * 
  */
 public interface LocalBluetoothDeviceListener {
@@ -31,13 +31,13 @@ public interface LocalBluetoothDeviceListener {
 	/**
 	 * Called when Bluetooth stack has been enabled
 	 */
-	public void enabled();
+	public void bluetoothEnabled();
 
 	/**
 	 * Called when Bluetooth stack has been disabled
 	 */
 
-	public void disabled();
+	public void bluetoothDisabled();
 
 	/**
 	 * Called when remote device discovery has started
@@ -47,7 +47,19 @@ public interface LocalBluetoothDeviceListener {
 	/**
 	 * Called when remote device discovery has been completed
 	 * 
-	 * @param devices the list of BD Addresses discovered
+	 * @param devices
+	 *            the list of BD Addresses discovered
 	 */
 	public void scanCompleted(ArrayList<String> devices);
+
+	/**
+	 * Called every time a remote device has been found scan process. The entire
+	 * list of devices discovered is returned at the end of scan process has
+	 * been completed
+	 * 
+	 * @param deviceAddress
+	 *            the address of the device just found
+	 * @since 0.3
+	 */
+	public void deviceFound(String deviceAddress);
 }

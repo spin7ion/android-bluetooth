@@ -21,30 +21,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * This interfaces models a RFComm connection to an assigned port to
- * to a remote device. BluetoothSocket instances are obtained invoking
- * public BluetoothSocket openSocket(int port) method on RemoteBluetoothDevice
+ * This interfaces models a RFComm connection to an assigned port to to a remote
+ * device. BluetoothSocket instances are obtained invoking public
+ * BluetoothSocket openSocket(int port) method on RemoteBluetoothDevice
  * 
- * @author Stefano Sanna - gerdavax@gmail.com
- *
+ * @author Stefano Sanna - gerdavax@gmail.com - http://www.gerdavax.it
+ * 
  */
 public interface BluetoothSocket {
-	
+
 	/**
 	 * Gets the RemoteBluetoothDevice instance that owns this socket
 	 * 
 	 * @return the RemoteBluetoothDevice which opened this socket
 	 */
 	public RemoteBluetoothDevice getRemoteBluetoothDevice();
-	
+
 	/**
 	 * Gets the remote port (channel) connected through this socket
 	 * 
-	 * @return the port to which this socket is connected 
-	 * @throws Exception
+	 * @return the port to which this socket is connected
 	 */
-	public int getPort() throws Exception;
-	
+	public int getPort();
+
 	/**
 	 * Gets the InputStream
 	 * 
@@ -53,12 +52,17 @@ public interface BluetoothSocket {
 	 */
 	public InputStream getInputStream() throws Exception;
 
-	public OutputStream getOutputStream() throws Exception;
-	
 	/**
-	 * Closes this socket. Input and output stream will be no longer available.
-	 *
+	 * Gets the OutputStream
+	 * 
+	 * @return
 	 * @throws Exception
 	 */
-	public void closeSocket() throws Exception;
+	public OutputStream getOutputStream() throws Exception;
+
+	/**
+	 * Closes this socket. Input and output stream will be no longer available.
+	 * 
+	 */
+	public void closeSocket();
 }
