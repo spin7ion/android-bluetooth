@@ -11,11 +11,11 @@ import android.util.Log;
  * 
  */
 public class Logger {
-	private static final String TAG = "Gerdavax.Bluetooth";
+	private static final String TAG = "easyBluetooth";
 	private static int LOGLEVEL = Log.VERBOSE;
 	
 	private static boolean isLoggable(int level) {
-		return LOGLEVEL <= level;// && Log.isLoggable(TAG, level);
+		return LOGLEVEL <= level && Log.isLoggable(TAG, level);
 	}
 	
 	@SuppressWarnings("unchecked")
