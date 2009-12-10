@@ -1329,6 +1329,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 		}
 		Intent intent = new Intent(AndroidBluetoothConstants.PAIRING_REQUEST_ACTION);
 		intent.putExtra(AndroidBluetoothConstants.ADDRESS, address);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
 
