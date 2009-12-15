@@ -1,5 +1,6 @@
 package it.gerdavax.easybluetooth.android1;
 
+import it.gerdavax.android.bluetooth.BluetoothException;
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
@@ -63,7 +64,6 @@ class RemoteDevice1Impl implements RemoteDevice {
 				lock.notify();
 			}
 		}
-		;
 		PortDiscoverer discoverer = new PortDiscoverer();
 		rbd.setListener(discoverer);
 		rbd.getRemoteServiceChannel(uuid16);
@@ -71,10 +71,15 @@ class RemoteDevice1Impl implements RemoteDevice {
 			lock.wait();
 		} catch (InterruptedException ie) {
 		}
-		return new BtSocket1Impl(rbd.openSocket(discoverer.port));
+		return openSocket(discoverer.port);
 	}
 
 	public int getRSSI() {
 		return (int) rbd.getRSSI();
+	}
+
+	@Override
+	public BtSocket openSocket(int port) throws BluetoothException {
+		return new BtSocket1Impl(rbd.openSocket(port));
 	}
 }
