@@ -3,9 +3,11 @@ package it.gerdavax.easybluetooth.android2;
 import it.gerdavax.easybluetooth.BtSocket;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 
 
 class RemoteDevice2Impl implements it.gerdavax.easybluetooth.RemoteDevice {
@@ -44,5 +46,18 @@ class RemoteDevice2Impl implements it.gerdavax.easybluetooth.RemoteDevice {
 	
 	public int getRSSI() {
 		return rssi;
+	}
+
+	@Override
+	public BtSocket openSocket(int port) {
+		try {
+			//connection = delegate.createRfcommSocketToServiceRecord(defaultProfile);
+			Method m = bd.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+			BluetoothSocket connection = (BluetoothSocket)m.invoke(bd, port);
+			connection.connect();
+			return new BtSocket2Impl( connection );
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

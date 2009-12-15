@@ -10,5 +10,7 @@ public interface RemoteDevice {
 
 	public abstract BtSocket openSocket(UUID serviceId ) throws Exception;
 	
+	public abstract BtSocket openSocket(int port) throws Exception;
+	
 	public abstract int getRSSI();
 }
