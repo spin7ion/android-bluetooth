@@ -38,4 +38,8 @@ public abstract class LocalDevice {
 	}
 	
 	public abstract RemoteDevice getRemoteForAddr(String addr);
+	
+	public abstract ServerControl listenForConnection(ConnectionListener listener, int port);
+	
+	public abstract void ensureDiscoverable();
 }
