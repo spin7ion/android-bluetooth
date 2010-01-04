@@ -21,11 +21,6 @@ class BtSocket1Impl implements BtSocket {
 	}
 
 	@Override
-	public void connect() throws IOException {
-		//nop
-	}
-
-	@Override
 	public InputStream getInputStream() throws Exception {
 		return socket.getInputStream();
 	}
