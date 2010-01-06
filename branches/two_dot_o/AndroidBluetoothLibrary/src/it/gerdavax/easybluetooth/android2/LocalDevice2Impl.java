@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import it.gerdavax.easybluetooth.ConnectionListener;
 import it.gerdavax.easybluetooth.Logger;
+import it.gerdavax.easybluetooth.ReadyListener;
 import it.gerdavax.easybluetooth.RemoteDevice;
 import it.gerdavax.easybluetooth.ScanListener;
 import it.gerdavax.easybluetooth.ServerControl;
@@ -29,9 +30,9 @@ public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 				BluetoothDevice rbd = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				int rssi = intent.getIntExtra(BluetoothDevice.EXTRA_RSSI, Integer.MIN_VALUE);
 				RemoteDevice2Impl tobounce = new RemoteDevice2Impl(rbd, rssi);
-				scanListener.deviceFound(tobounce);
+				scanListener.notifyDeviceFound(tobounce);
 			} else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
-				scanListener.scanCompleted();
+				scanListener.notifyScanCompleted();
 			}
 		}
 	};
@@ -41,21 +42,10 @@ public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		ctx = null;
 		super.destroy();
 	}
-	
-	public void init(Context _ctx) throws Exception {
-		super.init(_ctx);
-		if (!adapter.isEnabled()) {
-			adapter.enable();
-		}
-	}
 
-	@Override
-	public void scan(ScanListener listener) throws Exception {
-		super.scan(listener);
-		ctx.registerReceiver(receiver, null);
-		//if (adapter.isEnabled()) {
-			adapter.startDiscovery();
-		/*} else {
+	public void init(Context _ctx, final ReadyListener ready) throws Exception {
+		super.init(_ctx, ready);
+		if (!adapter.isEnabled()) {
 			ctx.registerReceiver(new BroadcastReceiver() {
 				@Override
 				public void onReceive(Context ctx, Intent i) {
@@ -63,12 +53,25 @@ public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 					int newState = i.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
 					if (newState == BluetoothAdapter.STATE_ON) {
 						ctx.unregisterReceiver(this);
-						adapter.startDiscovery();
+						ready.notifyReady();
 					}
 				}
 			}, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 			adapter.enable();
-		}*/
+		} else {
+			ready.ready();
+		}
+	}
+
+	@Override
+	public void scan(ScanListener listener) throws Exception {
+		super.scan(listener);
+		ctx.registerReceiver(receiver, null);
+		adapter.startDiscovery();
+	}
+
+	public void stopScan() {
+		adapter.cancelDiscovery();
 	}
 
 	@Override
@@ -103,33 +106,13 @@ public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		@Override
 		public void run() {
 			try {
-				if (!adapter.isEnabled()) {
-					final Object lock = new Object();
-					ctx.registerReceiver(new BroadcastReceiver() {
-						@Override
-						public void onReceive(Context ctx, Intent i) {
-							// filter with just one
-							int newState = i.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
-							if (newState == BluetoothAdapter.STATE_ON) {
-								ctx.unregisterReceiver(this);
-								lock.notify();
-							}
-						}
-					}, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-					adapter.enable();
-					try {
-						lock.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
 				// lock until socket arrives
-				BluetoothSocket bts = connection.accept(60 * 1000);
+				BluetoothSocket bts = connection.accept(Integer.MAX_VALUE);
 				Logger.d(this, "connection unlocked");
-				listener.connectionWaiting(new BtSocket2Impl(bts));
+				listener.notifyConnectionWaiting(new BtSocket2Impl(bts));
 			} catch (IOException e) {
 				e.printStackTrace();
-				listener.connectionError();
+				listener.notifyConnectionError();
 			}
 		}
 
