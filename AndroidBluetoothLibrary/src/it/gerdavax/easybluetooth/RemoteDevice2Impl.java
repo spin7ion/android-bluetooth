@@ -1,6 +1,5 @@
-package it.gerdavax.easybluetooth.android2;
+package it.gerdavax.easybluetooth;
 
-import it.gerdavax.easybluetooth.BtSocket;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

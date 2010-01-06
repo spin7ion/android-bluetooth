@@ -1,4 +1,4 @@
-package it.gerdavax.easybluetooth.android2;
+package it.gerdavax.easybluetooth;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -11,12 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import it.gerdavax.easybluetooth.ConnectionListener;
-import it.gerdavax.easybluetooth.Logger;
-import it.gerdavax.easybluetooth.ReadyListener;
-import it.gerdavax.easybluetooth.RemoteDevice;
-import it.gerdavax.easybluetooth.ScanListener;
-import it.gerdavax.easybluetooth.ServerControl;
 
 public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 

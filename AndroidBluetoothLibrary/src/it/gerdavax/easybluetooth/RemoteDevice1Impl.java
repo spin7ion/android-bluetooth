@@ -1,11 +1,9 @@
-package it.gerdavax.easybluetooth.android1;
+package it.gerdavax.easybluetooth;
 
 import it.gerdavax.android.bluetooth.BluetoothException;
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
-import it.gerdavax.easybluetooth.BtSocket;
-import it.gerdavax.easybluetooth.RemoteDevice;
 
 import java.util.UUID;
 
