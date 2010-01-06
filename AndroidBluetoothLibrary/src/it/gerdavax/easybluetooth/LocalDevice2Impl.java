@@ -47,7 +47,9 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 					int newState = i.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
 					if (newState == BluetoothAdapter.STATE_ON) {
 						ctx.unregisterReceiver(this);
-						ready.notifyReady();
+						if (ready != null) {
+							ready.notifyReady();
+						}
 					}
 				}
 			}, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));

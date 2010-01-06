@@ -53,35 +53,37 @@ class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		local = LocalBluetoothDevice.initLocalDevice(ctx);
 		if (!local.isEnabled()) { // bt is not enabled, enable
 			local.setListener(new LocalBluetoothDeviceListener() {
-				
+
 				@Override
 				public void scanStarted() {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void scanCompleted(ArrayList<String> devices) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void deviceFound(String deviceAddress) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void bluetoothEnabled() {
-					ready.notifyReady();
+					if (ready != null) {
+						ready.notifyReady();
+					}
 					local.setListener(null);
 				}
-				
+
 				@Override
 				public void bluetoothDisabled() {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
 			local.setEnabled(true);
