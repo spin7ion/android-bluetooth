@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.widget.Toast;
 
-public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
+class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 	private LocalBluetoothDevice local = null;
 	private LocalBluetoothDeviceListener localListener = new LocalBluetoothDeviceListener() {
 

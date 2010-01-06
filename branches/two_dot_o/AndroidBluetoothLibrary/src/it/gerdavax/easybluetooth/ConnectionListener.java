@@ -19,11 +19,11 @@ public abstract class ConnectionListener extends Handler {
 		}
 	}
 	
-	public final void notifyConnectionError() {
+	final void notifyConnectionError() {
 		this.sendMessage(this.obtainMessage(CONNECTION_ERROR));
 	}
 	
-	public final void notifyConnectionWaiting(BtSocket tobounce) {
+	final void notifyConnectionWaiting(BtSocket tobounce) {
 		this.sendMessage(this.obtainMessage(CONNECTION_WAITING, tobounce));
 	}
 	public abstract void connectionWaiting(BtSocket socket);

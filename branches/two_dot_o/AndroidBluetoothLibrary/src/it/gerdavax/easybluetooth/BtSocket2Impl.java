@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import android.bluetooth.BluetoothSocket;
 
-
 class BtSocket2Impl implements BtSocket {
 	private BluetoothSocket socket = null;
 	

@@ -19,11 +19,11 @@ public abstract class ScanListener extends Handler {
 		}
 	}
 	
-	public final void notifyScanCompleted() {
+	final void notifyScanCompleted() {
 		this.sendMessage(this.obtainMessage(SCAN_COMPLETED));
 	}
 	
-	public final void notifyDeviceFound(RemoteDevice tobounce) {
+	final void notifyDeviceFound(RemoteDevice tobounce) {
 		this.sendMessage(this.obtainMessage(DEVICE_FOUND, tobounce));
 	}
 	

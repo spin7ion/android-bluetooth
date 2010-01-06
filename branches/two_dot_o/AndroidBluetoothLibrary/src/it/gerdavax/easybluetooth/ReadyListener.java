@@ -13,7 +13,7 @@ public abstract class ReadyListener extends Handler{
 		}
 	}
 	
-	public final void notifyReady() {
+	final void notifyReady() {
 		this.sendMessage( this.obtainMessage(READY) );
 	}
 	

@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-public class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
+class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 
 	private static BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
