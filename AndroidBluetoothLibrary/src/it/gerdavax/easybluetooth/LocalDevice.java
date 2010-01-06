@@ -24,7 +24,7 @@ public abstract class LocalDevice {
 		return Integer.parseInt(Build.VERSION.SDK.trim());
 	}
 
-	public void init(final Context _ctx)  throws Exception {
+	public void init(final Context _ctx, ReadyListener ready)  throws Exception {
 		ctx = _ctx;
 	}
 
@@ -36,6 +36,8 @@ public abstract class LocalDevice {
 	public void scan(final ScanListener listener)  throws Exception{
 		scanListener = listener;
 	}
+	
+	public abstract void stopScan();
 	
 	public abstract RemoteDevice getRemoteForAddr(String addr);
 	

@@ -6,6 +6,7 @@ import it.gerdavax.android.bluetooth.LocalBluetoothDeviceListener;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.easybluetooth.ConnectionListener;
 import it.gerdavax.easybluetooth.Logger;
+import it.gerdavax.easybluetooth.ReadyListener;
 import it.gerdavax.easybluetooth.RemoteDevice;
 import it.gerdavax.easybluetooth.ScanListener;
 import it.gerdavax.easybluetooth.ServerControl;
@@ -25,23 +26,20 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 
 		@Override
 		public void scanCompleted(ArrayList<String> devices) {
-			scanListener.scanCompleted();
+			scanListener.notifyScanCompleted();
 		}
 
 		@Override
 		public void deviceFound(String deviceAddress) {
 			RemoteBluetoothDevice rbd = local.getRemoteBluetoothDevice(deviceAddress);
-			scanListener.deviceFound(new RemoteDevice1Impl(rbd));
+			scanListener.notifyDeviceFound(new RemoteDevice1Impl(rbd));
 		}
 
 		@Override
 		public void bluetoothEnabled() {
-			/*try {
-				local.scan();
-				local.setListener(null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
+			/*
+			 * try { local.scan(); local.setListener(null); } catch (Exception e) { e.printStackTrace(); }
+			 */
 		}
 
 		@Override
@@ -56,12 +54,45 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 	}
 
 	@Override
-	public void init(Context _ctx) throws Exception {
-		super.init(_ctx);
+	public void init(Context _ctx, final ReadyListener ready) throws Exception {
+		super.init(_ctx, ready);
 		local = LocalBluetoothDevice.initLocalDevice(ctx);
-		if (!local.isEnabled()) {
-			// bt is not enabled, enable then scan
+		if (!local.isEnabled()) { // bt is not enabled, enable
+			local.setListener(new LocalBluetoothDeviceListener() {
+				
+				@Override
+				public void scanStarted() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void scanCompleted(ArrayList<String> devices) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void deviceFound(String deviceAddress) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void bluetoothEnabled() {
+					ready.notifyReady();
+					local.setListener(null);
+				}
+				
+				@Override
+				public void bluetoothDisabled() {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 			local.setEnabled(true);
+		} else {
+			ready.ready();
 		}
 	}
 
@@ -70,6 +101,14 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		super.scan(listener);
 		local.setListener(localListener);
 		local.scan();
+	}
+
+	public void stopScan() {
+		try {
+			local.stopScanning();
+		} catch (Exception e) {
+			Logger.e(this, "stopScan error!", e);
+		}
 	}
 
 	@Override
@@ -109,12 +148,12 @@ public class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		public void run() {
 			try {
 				// lock until socket arrives
-				BluetoothSocket newSock = bs.accept(60 * 1000);
+				BluetoothSocket newSock = bs.accept(Integer.MAX_VALUE);
 				Logger.d(this, "connection unlocked");
-				listener.connectionWaiting(new BtSocket1Impl(newSock));
+				listener.notifyConnectionWaiting(new BtSocket1Impl(newSock));
 			} catch (Exception e) {
 				e.printStackTrace();
-				listener.connectionError();
+				listener.notifyConnectionError();
 			}
 		}
 	}
