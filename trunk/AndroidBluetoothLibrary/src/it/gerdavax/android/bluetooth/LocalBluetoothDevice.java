@@ -39,25 +39,21 @@ import android.os.RemoteException;
 import android.util.Log;
 
 /**
- * This class is the entry point of the Android Bluetooth Library. It implements
- * a singleton pattern.
+ * This class is the entry point of the Android Bluetooth Library. It implements a singleton pattern.
  * 
  * <br/>
- * <b>WARNING: do not forget to invoke close(Context) when your application
- * leaves, otherwise the LocalBluetoothDevice may not work on next
- * invocations.</b><br/>
+ * <b>WARNING: do not forget to invoke close(Context) when your application leaves, otherwise the LocalBluetoothDevice
+ * may not work on next invocations.</b><br/>
  * 
  * 
- * First step for using the Bluetooth services is to initialize the instance of
- * the LocalBluetoothDevice:
+ * First step for using the Bluetooth services is to initialize the instance of the LocalBluetoothDevice:
  * 
  * <pre>
  * LocalBluetoothDevice localBluetoothDevice = LocalBluetoothDevice.init(context);
  * </pre>
  * 
- * where <code>context</code> is the context of Activity which manages the
- * LocalBluetoothDevice instance. Bluetooth service status (enabled/disabled)
- * can be retrieved using method
+ * where <code>context</code> is the context of Activity which manages the LocalBluetoothDevice instance. Bluetooth
+ * service status (enabled/disabled) can be retrieved using method
  * 
  * <pre>
  * localBluetoothDevice.isEnabled();
@@ -69,16 +65,14 @@ import android.util.Log;
  * localBluetoothDevice.setEnabled(boolean);
  * </pre>
  * 
- * To start scanning (discovery) of surrounding Bluetooth devices just invoke
- * the
+ * To start scanning (discovery) of surrounding Bluetooth devices just invoke the
  * 
  * <pre>
  * localBluetoothDevice.scan();
  * </pre>
  * 
- * method. Both service on/off and device scanning are asynchronous processes,
- * therefore to receive notification about that, the application must provide a
- * LocalBluetoothDeviceListener and set it to the LocalBluetoothDevice instance.
+ * method. Both service on/off and device scanning are asynchronous processes, therefore to receive notification about
+ * that, the application must provide a LocalBluetoothDeviceListener and set it to the LocalBluetoothDevice instance.
  * 
  * @author Stefano Sanna - gerdavax@gmail.com - http://www.gerdavax.it
  * 
@@ -296,11 +290,11 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 				int bondState = getBondState(address);
 
 				switch (bondState) {
-					case BluetoothBroadcastReceiver.BOND_BONDED:
-						return true;
-					case BluetoothBroadcastReceiver.BOND_BONDING:
-					case BluetoothBroadcastReceiver.BOND_NOT_BONDED:
-						return false;
+				case BluetoothBroadcastReceiver.BOND_BONDED:
+					return true;
+				case BluetoothBroadcastReceiver.BOND_BONDING:
+				case BluetoothBroadcastReceiver.BOND_NOT_BONDED:
+					return false;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -389,6 +383,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 		private static final String CLASS_ANDROID_BLUETOOTH_RFCOMMSOCKET = "android.bluetooth.RfcommSocket";
 		private static final String METHOD_CREATE = "create";
 		private static final String METHOD_CONNECT = "connect";
+		private static final String METHOD_ACCEPT = "accept";
 		private static final String METHOD_BIND = "bind";
 		private static final String METHOD_GET_PORT = "getPort";
 		private static final String METHOD_LISTEN = "listen";
@@ -504,7 +499,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 		 */
 		BluetoothSocketImpl(RemoteBluetoothDeviceImpl remoteBluetoothDevice, int port) throws BluetoothException {
 			if (port > 0) {
-				Log.d(TAG, "creating new client BluetoothSocket for " + remoteBluetoothDevice.address + " on port " + port);
+				Log.d(TAG, "creating new client BluetoothSocket for " + remoteBluetoothDevice.address + " on port "
+						+ port);
 				this.remoteBluetoothDevice = remoteBluetoothDevice;
 				this.port = port;
 				connect();
@@ -516,9 +512,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 		/*
 		 * Opens a server socket
 		 */
-		BluetoothSocketImpl() throws BluetoothException {
-			bindAndListen();
-		}
+		BluetoothSocketImpl() throws BluetoothException {}
 
 		/*
 		 * Opens a server socket
@@ -528,6 +522,19 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 			bindAndListen();
 		}
 
+		private Object createSocketObject() {
+			try {
+				bluetoothSocketObject = bluetoothSocketClass.newInstance();
+
+				Method createMethod = bluetoothSocketClass.getMethod(METHOD_CREATE, new Class[] {});
+				createMethod.invoke(bluetoothSocketObject, new Object[] {});
+				return bluetoothSocketObject;
+			} catch (Throwable t) {
+				Log.e(TAG, "instantiating socket obj!", t);
+				return null;
+			}
+		}
+		
 		void init() throws BluetoothException {
 			try {
 				// quite strange: new package name with old class name...!!!
@@ -535,10 +542,11 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 
 				// ReflectionUtils.printMethods(bluetoothSocketClass);
 
-				bluetoothSocketObject = bluetoothSocketClass.newInstance();
+				bluetoothSocketObject = createSocketObject();
+				/*bluetoothSocketClass.newInstance();
 
 				Method createMethod = bluetoothSocketClass.getMethod(METHOD_CREATE, new Class[] {});
-				createMethod.invoke(bluetoothSocketObject, new Object[] {});
+				createMethod.invoke(bluetoothSocketObject, new Object[] {});*/
 			} catch (Throwable t) {
 				throw new BluetoothException(t);
 			}
@@ -548,13 +556,27 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 			init();
 
 			try {
-				Method connectMethod = bluetoothSocketClass.getMethod(METHOD_CONNECT, new Class[] { String.class, int.class });
-				Boolean connectMethodReturnValue = (Boolean) connectMethod.invoke(bluetoothSocketObject, new Object[] { remoteBluetoothDevice.address, port });
+				Method connectMethod = bluetoothSocketClass.getMethod(METHOD_CONNECT, new Class[] { String.class,
+						int.class });
+				Boolean connectMethodReturnValue = (Boolean) connectMethod.invoke(bluetoothSocketObject, new Object[] {
+						remoteBluetoothDevice.address, port });
 
 				if (!connectMethodReturnValue.booleanValue()) {
 					throw new BluetoothException("Can't connect to device " + remoteBluetoothDevice.address);
 				}
+			} catch (Throwable t) {
+				throw new BluetoothException(t);
+			}
+		}
 
+		public BluetoothSocket accept(int timeout) throws BluetoothException {
+			try {
+				ReflectionUtils.printMethods(bluetoothSocketClass);
+				Method bindMethod = bluetoothSocketClass.getMethod(METHOD_ACCEPT, new Class[] { bluetoothSocketClass, int.class });
+				BluetoothSocketImpl toRet = new BluetoothSocketImpl();
+				toRet.bluetoothSocketObject =  createSocketObject();
+				Object bindMethodReturnValue = bindMethod.invoke(toRet.bluetoothSocketObject, new Object[] { bluetoothSocketObject , timeout });
+				return toRet;
 			} catch (Throwable t) {
 				throw new BluetoothException(t);
 			}
@@ -565,16 +587,17 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 
 			try {
 				Method bindMethod = bluetoothSocketClass.getMethod(METHOD_BIND, new Class[] { String.class });
-				Object bindMethodReturnValue = bindMethod.invoke(bluetoothSocketObject, new Object[] { "" });
+				Object bindMethodReturnValue = bindMethod.invoke(bluetoothSocketObject, new Object[] { "devicename-tobeignored" });
 				// System.out.println("Bind result: " + bindMethodReturnValue);
 
 				Method listenMethod = bluetoothSocketClass.getMethod(METHOD_LISTEN, new Class[] { int.class });
-				Object listenMethodReturnValue = listenMethod.invoke(bluetoothSocketObject, new Object[] { 1 });
+				Object listenMethodReturnValue = listenMethod.invoke(bluetoothSocketObject, new Object[] { this.port });
 				// System.out.println("Listen result: " +
 				// listenMethodReturnValue);
 
 				Method getPortMethod = bluetoothSocketClass.getMethod(METHOD_GET_PORT, new Class[] {});
-				Integer getPortMethodReturnValue = (Integer) getPortMethod.invoke(bluetoothSocketObject, new Object[] {});
+				Integer getPortMethodReturnValue = (Integer) getPortMethod.invoke(bluetoothSocketObject,
+						new Object[] {});
 				// System.out.println("Port result: " +
 				// getPortMethodReturnValue);
 
@@ -731,7 +754,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 					// int deviceClass = intent.getIntExtra(CLASS,
 					// BluetoothClasses.DEVICE_MAJOR_UNCLASSIFIED);
 					int deviceClass = intent.getIntExtra(AndroidBluetoothConstants.CLASS, 0);
-					System.out.println("Device found with address " + address + ", class " + deviceClass + " and rssi " + rssi);
+					System.out.println("Device found with address " + address + ", class " + deviceClass + " and rssi "
+							+ rssi);
 
 					_localDevice.devices.add(address);
 
@@ -745,11 +769,9 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 					}
 
 					/*
-					 * Bundle extras = intent.getExtras(); Set<String> keys =
-					 * extras.keySet(); Iterator<String> iterator =
-					 * keys.iterator(); String key; while (iterator.hasNext()) {
-					 * key = iterator.next(); System.out.println("Extra kay: " +
-					 * key); }
+					 * Bundle extras = intent.getExtras(); Set<String> keys = extras.keySet(); Iterator<String> iterator
+					 * = keys.iterator(); String key; while (iterator.hasNext()) { key = iterator.next();
+					 * System.out.println("Extra kay: " + key); }
 					 */
 
 					// introduced in 0.3
@@ -801,7 +823,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 			String address = intent.getStringExtra(AndroidBluetoothConstants.ADDRESS);
 			int previousBondState = intent.getIntExtra(AndroidBluetoothConstants.BOND_PREVIOUS_STATE, -1);
 			int bondState = intent.getIntExtra(AndroidBluetoothConstants.BOND_STATE, -1);
-			Log.d(TAG_RECEIVER, "processBondStateChanged() for device " + address + " from " + previousBondState + " to " + bondState);
+			Log.d(TAG_RECEIVER, "processBondStateChanged() for device " + address + " from " + previousBondState
+					+ " to " + bondState);
 
 			if (bondState == BOND_BONDED) {
 				if (_localDevice.remoteDevices.containsKey(address)) {
@@ -818,12 +841,12 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 
 			if (_localDevice.listener != null) {
 				switch (bluetoothState) {
-					case BLUETOOTH_STATE_ON:
-						_localDevice.listener.bluetoothEnabled();
-						break;
-					case BLUETOOTH_STATE_OFF:
-						_localDevice.listener.bluetoothDisabled();
-						break;
+				case BLUETOOTH_STATE_ON:
+					_localDevice.listener.bluetoothEnabled();
+					break;
+				case BLUETOOTH_STATE_OFF:
+					_localDevice.listener.bluetoothDisabled();
+					break;
 				}
 			}
 		}
@@ -866,8 +889,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	/**
 	 * 
 	 * @param context
-	 *            the context of the Activity which uses the
-	 *            LocalBluetoothDevice
+	 *            the context of the Activity which uses the LocalBluetoothDevice
 	 * @return the unique instance of LocalBluetoothDevice
 	 * @throws Exception
 	 *             if system's Bluetooth service can't be addressed
@@ -913,7 +935,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	 */
 	public static LocalBluetoothDevice getLocalDevice() throws IllegalStateException {
 		if (_localDevice == null) {
-			throw new IllegalStateException("LocalBluetoothDevice has not been initialized. Call init() with a valid context.");
+			throw new IllegalStateException(
+					"LocalBluetoothDevice has not been initialized. Call init() with a valid context.");
 		}
 		return _localDevice;
 	}
@@ -984,8 +1007,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	}
 
 	/**
-	 * Stops current device scanning (only if it has been started by this
-	 * LocalBluetoothDevice)
+	 * Stops current device scanning (only if it has been started by this LocalBluetoothDevice)
 	 * 
 	 * @throws Exception
 	 * @since 0.2
@@ -1001,8 +1023,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	/**
 	 * DOES NOT WORK! (keeping it private)
 	 * 
-	 * Native error is: ERROR/bluetooth_common.cpp(56):
-	 * dbus_func_args_timeout_valist: D-Bus error in GetRemoteFeatures:
+	 * Native error is: ERROR/bluetooth_common.cpp(56): dbus_func_args_timeout_valist: D-Bus error in GetRemoteFeatures:
 	 * org.bluez.Error.NotAvailable (Not Available)
 	 * 
 	 * @param address
@@ -1011,15 +1032,15 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	 * @since 0.2
 	 */
 	private Object getRemoteFeatures(String address) throws Exception {
-		Method getRemoteFeaturesMethod = bluetoothServiceClass.getMethod("getRemoteFeatures", new Class[] { String.class });
+		Method getRemoteFeaturesMethod = bluetoothServiceClass.getMethod("getRemoteFeatures",
+				new Class[] { String.class });
 		Object object = getRemoteFeaturesMethod.invoke(bluetoothService, new Object[] { address });
 		return object;
 	}
 
 	/*
-	 * Since 0.3 this method is private. To get a remote device name from
-	 * outside the library, the application must get the RemoteBluetoothDevice
-	 * instance.
+	 * Since 0.3 this method is private. To get a remote device name from outside the library, the application must get
+	 * the RemoteBluetoothDevice instance.
 	 */
 	private String getRemoteName(String address) throws Exception {
 		Method getRemoteNameMethod = bluetoothServiceClass.getMethod("getRemoteName", new Class[] { String.class });
@@ -1027,21 +1048,19 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	}
 
 	/*
-	 * //OLD VERSION public String getRemoteName(String address) throws
-	 * Exception { if (remoteDevices.containsKey(address)) {
-	 * RemoteBluetoothDeviceImpl remoteDevice = remoteDevices.get(address);
+	 * //OLD VERSION public String getRemoteName(String address) throws Exception { if
+	 * (remoteDevices.containsKey(address)) { RemoteBluetoothDeviceImpl remoteDevice = remoteDevices.get(address);
 	 * return remoteDevice.getName(); } else { Method getRemoteNameMethod =
-	 * bluetoothServiceClass.getMethod("getRemoteName", new Class[] {
-	 * String.class }); return getRemoteNameMethod.invoke(bluetoothService, new
-	 * Object[] { address }).toString(); } }
+	 * bluetoothServiceClass.getMethod("getRemoteName", new Class[] { String.class }); return
+	 * getRemoteNameMethod.invoke(bluetoothService, new Object[] { address }).toString(); } }
 	 */
 
 	/**
-	 * Sets the LocalBluetoothDeviceListener which will receive events about
-	 * Bluetooth activation and device discovery progress
+	 * Sets the LocalBluetoothDeviceListener which will receive events about Bluetooth activation and device discovery
+	 * progress
 	 * 
-	 * WARNING: all invocations to the listener are synchronous, therefore
-	 * listener's method implementation must avoid long operations.
+	 * WARNING: all invocations to the listener are synchronous, therefore listener's method implementation must avoid
+	 * long operations.
 	 * 
 	 * @param listener
 	 */
@@ -1062,8 +1081,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	}
 
 	/**
-	 * Closes the LocalBluetoothDevice and unregisters any Bluetooth service
-	 * broadcast listener. All opened BluetoothSocket will be closed.
+	 * Closes the LocalBluetoothDevice and unregisters any Bluetooth service broadcast listener. All opened
+	 * BluetoothSocket will be closed.
 	 * 
 	 */
 	public void close() {
@@ -1172,8 +1191,7 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	 * 
 	 * @param address
 	 *            the BDADDR (address) of required device
-	 * @return the RemoteBluetoothDevice instance associated with assigned
-	 *         address
+	 * @return the RemoteBluetoothDevice instance associated with assigned address
 	 */
 	public RemoteBluetoothDevice getRemoteBluetoothDevice(String address) {
 		RemoteBluetoothDeviceImpl remoteBluetoothDevice;
@@ -1197,17 +1215,20 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	}
 
 	private boolean getRemoteServiceChannel(String address, int uuid16) throws Exception {
-		Method getRemoteServiceChannelMethod = bluetoothServiceClass
-				.getMethod("getRemoteServiceChannel", new Class[] { String.class, short.class, IBluetoothDeviceCallback.class });
-		Boolean returnValue = (Boolean) getRemoteServiceChannelMethod.invoke(bluetoothService, new Object[] { address, new Short((short) uuid16), new BluetoothDeviceCallback() });
+		Method getRemoteServiceChannelMethod = bluetoothServiceClass.getMethod("getRemoteServiceChannel", new Class[] {
+				String.class, short.class, IBluetoothDeviceCallback.class });
+		Boolean returnValue = (Boolean) getRemoteServiceChannelMethod.invoke(bluetoothService, new Object[] { address,
+				new Short((short) uuid16), new BluetoothDeviceCallback() });
 		return returnValue.booleanValue();
 	}
 
 	private static void collectPlatformConstants() {
 		try {
 			PLATFORM_SCAN_MODE_NONE = ReflectionUtils.readStaticConstantValue(bluetoothServiceClass, "SCAN_MODE_NONE");
-			PLATFORM_SCAN_MODE_CONNECTABLE = ReflectionUtils.readStaticConstantValue(bluetoothServiceClass, "SCAN_MODE_CONNECTABLE");
-			PLATFORM_SCAN_MODE_CONNECTABLE_DISCOVERABLE = ReflectionUtils.readStaticConstantValue(bluetoothServiceClass, "SCAN_MODE_CONNECTABLE_DISCOVERABLE");
+			PLATFORM_SCAN_MODE_CONNECTABLE = ReflectionUtils.readStaticConstantValue(bluetoothServiceClass,
+					"SCAN_MODE_CONNECTABLE");
+			PLATFORM_SCAN_MODE_CONNECTABLE_DISCOVERABLE = ReflectionUtils.readStaticConstantValue(
+					bluetoothServiceClass, "SCAN_MODE_CONNECTABLE_DISCOVERABLE");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1225,9 +1246,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 		int platformScanMode = returnValue.intValue();
 
 		/*
-		 * instead of mapping directly to constants defined in
-		 * android.bleutooth.BluetoothDevice (which is not safe), which do
-		 * mapping with names. It is longer yet safer :-)
+		 * instead of mapping directly to constants defined in android.bleutooth.BluetoothDevice (which is not safe),
+		 * which do mapping with names. It is longer yet safer :-)
 		 */
 
 		if (platformScanMode == PLATFORM_SCAN_MODE_NONE) {
@@ -1248,29 +1268,28 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	 */
 	public void setScanMode(int mode) throws Exception {
 		/*
-		 * as for getScanMode(), instead of mapping directly to constants
-		 * defined in android.bleutooth.BluetoothDevice (which is not safe),
-		 * which do mapping with names. It is longer yet safer :-)
+		 * as for getScanMode(), instead of mapping directly to constants defined in android.bleutooth.BluetoothDevice
+		 * (which is not safe), which do mapping with names. It is longer yet safer :-)
 		 */
 
 		int platformScanMode = 0;
 
 		switch (mode) {
-			case SCAN_MODE_NONE:
-				platformScanMode = PLATFORM_SCAN_MODE_NONE;
-				break;
-			case SCAN_MODE_CONNECTABLE:
-				platformScanMode = PLATFORM_SCAN_MODE_CONNECTABLE;
-				break;
-			case SCAN_MODE_CONNECTABLE_DISCOVERABLE:
-				platformScanMode = PLATFORM_SCAN_MODE_CONNECTABLE_DISCOVERABLE;
-				break;
-			default:
-				throw new RuntimeException("Unknown scan mode");
+		case SCAN_MODE_NONE:
+			platformScanMode = PLATFORM_SCAN_MODE_NONE;
+			break;
+		case SCAN_MODE_CONNECTABLE:
+			platformScanMode = PLATFORM_SCAN_MODE_CONNECTABLE;
+			break;
+		case SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+			platformScanMode = PLATFORM_SCAN_MODE_CONNECTABLE_DISCOVERABLE;
+			break;
+		default:
+			throw new RuntimeException("Unknown scan mode");
 		}
 
 		Method setScanModeMethod = bluetoothServiceClass.getMethod(METHOD_SET_SCAN_MODE, new Class[] { int.class });
-		setScanModeMethod.invoke(bluetoothService, new Object[] { platformScanMode });
+		setScanModeMethod.invoke(bluetoothService, new Object[] { platformScanMode});
 	}
 
 	/**
@@ -1278,10 +1297,10 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 	 * 
 	 * @since 0.3
 	 */
-	public BluetoothSocket openServerSocket() throws BluetoothException {
+	/*public BluetoothSocket openServerSocket() throws BluetoothException {
 		BluetoothSocketImpl serverSocket = new BluetoothSocketImpl();
 		return serverSocket;
-	}
+	}*/
 
 	/**
 	 * Opens a server socket on given channel (between 12 and 30)
@@ -1346,9 +1365,8 @@ public final class LocalBluetoothDevice implements BluetoothDevice {
 			notificationManager.cancel(android.R.drawable.stat_sys_data_bluetooth);
 		} catch (Exception e) {
 			/*
-			 * Even if an error occurs, there is nothing we can do (neither the
-			 * application should be interested in knowing that the system
-			 * notification can't be canceled
+			 * Even if an error occurs, there is nothing we can do (neither the application should be interested in
+			 * knowing that the system notification can't be canceled
 			 */
 		}
 	}
