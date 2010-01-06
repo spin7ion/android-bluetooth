@@ -1,15 +1,9 @@
-package it.gerdavax.easybluetooth.android1;
+package it.gerdavax.easybluetooth;
 
 import it.gerdavax.android.bluetooth.BluetoothSocket;
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.LocalBluetoothDeviceListener;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
-import it.gerdavax.easybluetooth.ConnectionListener;
-import it.gerdavax.easybluetooth.Logger;
-import it.gerdavax.easybluetooth.ReadyListener;
-import it.gerdavax.easybluetooth.RemoteDevice;
-import it.gerdavax.easybluetooth.ScanListener;
-import it.gerdavax.easybluetooth.ServerControl;
 
 import java.util.ArrayList;
 

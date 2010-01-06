@@ -12,9 +12,9 @@ public abstract class LocalDevice {
 		int vInt = LocalDevice.getVersionNumber();
 		Logger.i(LocalDevice.class, "Parsed version number is "+vInt);
 		if (vInt < SDK_NUM_2_0) {
-			toRet = new it.gerdavax.easybluetooth.android1.LocalDevice1Impl();
+			toRet = new it.gerdavax.easybluetooth.LocalDevice1Impl();
 		} else {
-			toRet = new it.gerdavax.easybluetooth.android2.LocalDevice2Impl();
+			toRet = new it.gerdavax.easybluetooth.LocalDevice2Impl();
 		}
 		Logger.i(LocalDevice.class, "Returning: "+toRet);
 		return toRet;

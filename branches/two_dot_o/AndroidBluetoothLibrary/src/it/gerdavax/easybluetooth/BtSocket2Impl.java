@@ -1,4 +1,4 @@
-package it.gerdavax.easybluetooth.android2;
+package it.gerdavax.easybluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import android.bluetooth.BluetoothSocket;
 
-import it.gerdavax.easybluetooth.BtSocket;
 
 class BtSocket2Impl implements BtSocket {
 	private BluetoothSocket socket = null;
