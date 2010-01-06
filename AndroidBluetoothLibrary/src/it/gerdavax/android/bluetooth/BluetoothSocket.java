@@ -65,4 +65,13 @@ public interface BluetoothSocket {
 	 * 
 	 */
 	public void closeSocket();
+	
+	/** 
+	 * Locks until a connection is made or timeout has occurred to this bluetooth adapter 
+	 * or the timeout has occurred
+	 * 
+	 * @param timeout
+	 * @throws Exception
+	 */
+	public BluetoothSocket accept(int timeout) throws Exception;
 }
