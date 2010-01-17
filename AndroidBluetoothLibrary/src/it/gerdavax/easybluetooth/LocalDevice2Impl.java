@@ -20,24 +20,31 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		@Override
 		public void onReceive(Context ctx, Intent intent) {
 			final String action = intent.getAction();
+			Logger.v("received "+action);
 			if (action.equals(BluetoothDevice.ACTION_FOUND)) {
 				BluetoothDevice rbd = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				int rssi = intent.getIntExtra(BluetoothDevice.EXTRA_RSSI, Integer.MIN_VALUE);
+				int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
 				RemoteDevice2Impl tobounce = new RemoteDevice2Impl(rbd, rssi);
 				scanListener.notifyDeviceFound(tobounce);
 			} else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
 				scanListener.notifyScanCompleted();
+				ctx.unregisterReceiver(receiver);
 			}
 		}
 	};
 
 	@Override
 	public void destroy() {
+		try {
+			ctx.unregisterReceiver(receiver);
+		} catch (IllegalArgumentException iae) {
+			//receiver was not really registered
+		}
 		ctx = null;
 		super.destroy();
 	}
 
-	public void init(Context _ctx, final ReadyListener ready) throws Exception {
+	public void init(Context _ctx, final ReadyListener ready) {
 		super.init(_ctx, ready);
 		if (!adapter.isEnabled()) {
 			ctx.registerReceiver(new BroadcastReceiver() {
@@ -60,9 +67,12 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 	}
 
 	@Override
-	public void scan(ScanListener listener) throws Exception {
+	public void scan(ScanListener listener) {
 		super.scan(listener);
-		ctx.registerReceiver(receiver, null);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BluetoothDevice.ACTION_FOUND);
+		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		ctx.registerReceiver(receiver, filter);
 		adapter.startDiscovery();
 	}
 

@@ -7,7 +7,7 @@ import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
 
 import java.util.UUID;
 
-class RemoteDevice1Impl implements RemoteDevice {
+class RemoteDevice1Impl extends RemoteDevice {
 	private RemoteBluetoothDevice rbd = null;
 
 	RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {

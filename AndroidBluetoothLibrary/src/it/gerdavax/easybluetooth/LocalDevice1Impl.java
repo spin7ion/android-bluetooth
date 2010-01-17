@@ -48,55 +48,63 @@ class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 	}
 
 	@Override
-	public void init(Context _ctx, final ReadyListener ready) throws Exception {
+	public void init(Context _ctx, final ReadyListener ready) {
 		super.init(_ctx, ready);
-		local = LocalBluetoothDevice.initLocalDevice(ctx);
-		if (!local.isEnabled()) { // bt is not enabled, enable
-			local.setListener(new LocalBluetoothDeviceListener() {
+		try {
+			local = LocalBluetoothDevice.initLocalDevice(ctx);
+			if (!local.isEnabled()) { // bt is not enabled, enable
+				local.setListener(new LocalBluetoothDeviceListener() {
 
-				@Override
-				public void scanStarted() {
-					// TODO Auto-generated method stub
+					@Override
+					public void scanStarted() {
+						// TODO Auto-generated method stub
 
-				}
-
-				@Override
-				public void scanCompleted(ArrayList<String> devices) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void deviceFound(String deviceAddress) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void bluetoothEnabled() {
-					if (ready != null) {
-						ready.notifyReady();
 					}
-					local.setListener(null);
-				}
 
-				@Override
-				public void bluetoothDisabled() {
-					// TODO Auto-generated method stub
+					@Override
+					public void scanCompleted(ArrayList<String> devices) {
+						// TODO Auto-generated method stub
 
-				}
-			});
-			local.setEnabled(true);
-		} else {
-			ready.ready();
+					}
+
+					@Override
+					public void deviceFound(String deviceAddress) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void bluetoothEnabled() {
+						if (ready != null) {
+							ready.notifyReady();
+						}
+						local.setListener(null);
+					}
+
+					@Override
+					public void bluetoothDisabled() {
+						// TODO Auto-generated method stub
+
+					}
+				});
+				local.setEnabled(true);
+			} else {
+				ready.ready();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void scan(final ScanListener listener) throws Exception {
+	public void scan(final ScanListener listener) {
 		super.scan(listener);
 		local.setListener(localListener);
-		local.scan();
+		try {
+			local.scan();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void stopScan() {
