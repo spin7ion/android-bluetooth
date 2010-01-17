@@ -2,7 +2,7 @@ package it.gerdavax.easybluetooth;
 
 import java.util.UUID;
 
-public interface RemoteDevice {
+public abstract class RemoteDevice {
 
 	public abstract String getFriendlyName();
 
@@ -13,4 +13,9 @@ public interface RemoteDevice {
 	public abstract BtSocket openSocket(int port) throws Exception;
 	
 	public abstract int getRSSI();
+	
+	@Override
+	public String toString() {
+		return getFriendlyName()+"@"+getAddress();
+	}
 }

@@ -9,7 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
 
-class RemoteDevice2Impl implements it.gerdavax.easybluetooth.RemoteDevice {
+class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 	private BluetoothDevice bd = null;
 	private int rssi = -1;
 	
