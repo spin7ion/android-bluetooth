@@ -14,6 +14,8 @@ public abstract class RemoteDevice {
 	
 	public abstract int getRSSI();
 	
+	public abstract void ensurePaired();
+	
 	@Override
 	public String toString() {
 		return getFriendlyName()+"@"+getAddress();

@@ -14,7 +14,7 @@ class RemoteDevice1Impl extends RemoteDevice {
 		super();
 		this.rbd = _rbd;
 	}
-	
+
 	public String getFriendlyName() {
 		try {
 			return rbd.getName();
@@ -79,5 +79,38 @@ class RemoteDevice1Impl extends RemoteDevice {
 	@Override
 	public BtSocket openSocket(int port) throws BluetoothException {
 		return new BtSocket1Impl(rbd.openSocket(port));
+	}
+
+	@Override
+	public void ensurePaired() {
+		if (!rbd.isPaired()) {
+			rbd.setListener(new RemoteBluetoothDeviceListener() {
+				
+				@Override
+				public void serviceChannelNotAvailable(int serviceID) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void pinRequested() {
+					LocalBluetoothDevice.getLocalDevice().showDefaultPinInputActivity(getAddress(), true);
+				}
+				
+				@Override
+				public void paired() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void gotServiceChannel(int serviceID, int channel) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			rbd.pair();
+			
+		}
 	}
 }
