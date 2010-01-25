@@ -3,6 +3,13 @@ package it.gerdavax.easybluetooth;
 import android.content.Context;
 import android.os.Build;
 
+/**
+ * Root class, represents the local device.
+ * Has methods for Scanning remote devices, and get remote handles on them.
+ * 
+ * @author Emanuele Di Saverio (emanuele.disaverio at gmail.com)
+ *
+ */
 public abstract class LocalDevice {
 	protected Context ctx;
 	protected ScanListener scanListener = null;

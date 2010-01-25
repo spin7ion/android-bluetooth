@@ -3,6 +3,12 @@ package it.gerdavax.easybluetooth;
 import android.os.Handler;
 import android.os.Message;
 
+/**
+ * Listener for receiving the results of a Bluetooth scan activity.
+ * 
+ * @author Emanuele Di Saverio (emanuele.disaverio at gmail.com)
+ *
+ */
 public abstract class ScanListener {
 	private static final int DEVICE_FOUND = 1;
 	private static final int SCAN_COMPLETED = 2;
