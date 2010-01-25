@@ -3,6 +3,13 @@ package it.gerdavax.easybluetooth;
 import android.os.Handler;
 import android.os.Message;
 
+/**
+ * Listener for acceptance of incoming connection.
+ * All calls are synchronized with the main thread handler (no need to use an <pre>android.os.Handler</pre>)
+ * 
+ * @author Emanuele Di Saverio (emanuele.disaverio at gmail.com)
+ *
+ */
 public abstract class ConnectionListener {
 	private static final int CONNECTION_WAITING = 1;
 	private static final int CONNECTION_ERROR = 2;
