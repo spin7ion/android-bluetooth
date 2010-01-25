@@ -3,6 +3,7 @@ package it.gerdavax.easybluetooth;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -140,5 +141,39 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		// default duration for discoverable action
 		Intent act = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		ctx.startActivity(act);
+	}
+	/**
+	 * Shows system activity to input PIN for assigned device
+	 * 
+	 * Thanks to Emanuele Di Saverio
+	 * 
+	 * @since 0.3
+	 */
+	public void showDefaultPinInputActivity(BluetoothDevice address, boolean clearSystemNotification) {
+		if (clearSystemNotification) {
+			clearSystemNotification();
+		}
+		String ACTION_PAIRING_REQUEST =
+            "android.bluetooth.device.action.PAIRING_REQUEST";
+		Intent intent = new Intent(ACTION_PAIRING_REQUEST);
+		String EXTRA_DEVICE = "android.bluetooth.device.extra.DEVICE";
+		intent.putExtra(EXTRA_DEVICE, address);
+		String EXTRA_PAIRING_VARIANT =
+	            "android.bluetooth.device.extra.PAIRING_VARIANT";
+		int PAIRING_VARIANT_PIN = 0;
+		intent.putExtra(EXTRA_PAIRING_VARIANT,PAIRING_VARIANT_PIN);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		ctx.startActivity(intent);
+	}
+
+	private NotificationManager notificationManager = null;
+	public void clearSystemNotification() {
+		try {
+			if (notificationManager == null) {
+				notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+			}
+			notificationManager.cancel(android.R.drawable.stat_sys_data_bluetooth);
+		} catch (Exception e) {
+		}
 	}
 }

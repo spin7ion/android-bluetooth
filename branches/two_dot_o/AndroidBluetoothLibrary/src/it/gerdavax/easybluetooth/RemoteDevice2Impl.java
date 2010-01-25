@@ -6,6 +6,10 @@ import java.util.UUID;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 	private BluetoothDevice bd = null;
@@ -79,6 +83,7 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 			if (!isBonded()) {
 				Method createBondMethod = bd.getClass().getMethod("createBond", new Class[] {});
 				createBondMethod.invoke(bd, new Object[] {});
+				((LocalDevice2Impl)LocalDevice.getInstance()).showDefaultPinInputActivity(bd, true);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
