@@ -4,12 +4,14 @@ import it.gerdavax.android.bluetooth.BluetoothException;
 import it.gerdavax.android.bluetooth.LocalBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDevice;
 import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
+import it.gerdavax.util.Logger;
 
 import java.util.UUID;
 
 class RemoteDevice1Impl extends RemoteDevice {
 	
 	private RemoteBluetoothDevice rbd = null;
+	private Logger log = Logger.getLogger("EASYBT");
 
 	RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {
 		super();
@@ -88,14 +90,14 @@ class RemoteDevice1Impl extends RemoteDevice {
 			Thread t = new Thread() {
 				@Override
 				public void run() {
-					Logger.e("openedClose");
+					log.e("openedClose");
 					try {
 						rbd.openSocket(1).closeSocket();
 					} catch (BluetoothException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Logger.e("openClosed");
+					log.e("openClosed");
 				}
 			};
 			t.start();
@@ -114,7 +116,7 @@ class RemoteDevice1Impl extends RemoteDevice {
 				
 				@Override
 				public void paired() {
-					Logger.e("paired()");
+					log.e("paired()");
 				}
 				
 				@Override
