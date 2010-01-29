@@ -11,7 +11,7 @@ import java.util.UUID;
 class RemoteDevice1Impl extends RemoteDevice {
 	
 	private RemoteBluetoothDevice rbd = null;
-	private Logger log = Logger.getLogger("EASYBT");
+	private final Logger log = Logger.getLogger("EASYBT");
 
 	RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {
 		super();

@@ -10,7 +10,7 @@ import android.bluetooth.BluetoothSocket;
 
 class BtSocket2Impl implements BtSocket {
 	private BluetoothSocket socket = null;
-	private Logger log = Logger.getLogger("EASYBT");
+	private final Logger log = Logger.getLogger("EASYBT");
 	
 	public BtSocket2Impl(BluetoothSocket socket) {
 		super();

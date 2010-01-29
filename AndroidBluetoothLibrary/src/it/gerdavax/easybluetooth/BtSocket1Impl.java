@@ -9,7 +9,7 @@ import it.gerdavax.util.Logger;
 
 class BtSocket1Impl implements BtSocket {
 	private BluetoothSocket socket = null;
-	private Logger log = Logger.getLogger("EASYBT");
+	private final Logger log = Logger.getLogger("EASYBT");
 	public BtSocket1Impl(BluetoothSocket socket) {
 		super();
 		this.socket = socket;

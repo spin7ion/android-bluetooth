@@ -1,5 +1,7 @@
 package it.gerdavax.easybluetooth;
 
+import it.gerdavax.util.Logger;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -11,6 +13,7 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 	
 	private BluetoothDevice bd = null;
 	private int rssi = -1;
+	private final Logger log = Logger.getLogger("EASYBT");
 
 	RemoteDevice2Impl(BluetoothDevice _rbd) {
 		this(_rbd, Integer.MIN_VALUE);
