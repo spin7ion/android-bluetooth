@@ -16,7 +16,7 @@ public abstract class LocalDevice {
 	protected ScanListener scanListener = null;
 	private static final int SDK_NUM_2_0 = 5;
 	private static LocalDevice instance = null;
-	protected static Logger log = Logger.getLogger("EASYBT");
+	protected final static Logger log = Logger.getLogger("EASYBT");
 
 	public static synchronized LocalDevice getInstance() {
 		if (instance == null) {
