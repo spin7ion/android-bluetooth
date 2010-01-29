@@ -8,6 +8,7 @@ import it.gerdavax.android.bluetooth.RemoteBluetoothDeviceListener;
 import java.util.UUID;
 
 class RemoteDevice1Impl extends RemoteDevice {
+	
 	private RemoteBluetoothDevice rbd = null;
 
 	RemoteDevice1Impl(RemoteBluetoothDevice _rbd) {
@@ -84,6 +85,20 @@ class RemoteDevice1Impl extends RemoteDevice {
 	@Override
 	public void ensurePaired() {
 		if (!rbd.isPaired()) {
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					Logger.e("openedClose");
+					try {
+						rbd.openSocket(1).closeSocket();
+					} catch (BluetoothException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Logger.e("openClosed");
+				}
+			};
+			t.start();
 			rbd.setListener(new RemoteBluetoothDeviceListener() {
 				
 				@Override
@@ -99,8 +114,7 @@ class RemoteDevice1Impl extends RemoteDevice {
 				
 				@Override
 				public void paired() {
-					// TODO Auto-generated method stub
-					
+					Logger.e("paired()");
 				}
 				
 				@Override

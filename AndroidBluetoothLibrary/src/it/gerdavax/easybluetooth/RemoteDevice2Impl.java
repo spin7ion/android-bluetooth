@@ -6,15 +6,11 @@ import java.util.UUID;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 
 class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
+	
 	private BluetoothDevice bd = null;
 	private int rssi = -1;
-	private static final int BONDED = 10;
 
 	RemoteDevice2Impl(BluetoothDevice _rbd) {
 		this(_rbd, Integer.MIN_VALUE);
@@ -25,21 +21,11 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 		this.bd = _rbd;
 		rssi = _rssi;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.gerdavax.bluetooth.RemoteInterface#getFriendlyName()
-	 */
+	
 	public String getFriendlyName() {
 		return bd.getName();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.gerdavax.bluetooth.RemoteInterface#getAddress()
-	 */
+	
 	public String getAddress() {
 		return bd.getAddress();
 	}
@@ -68,13 +54,7 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 	}
 
 	private boolean isBonded() {
-		try {
-			Method createBondMethod = bd.getClass().getMethod("getBondState", new Class[] {});
-			Integer result = (Integer) createBondMethod.invoke(bd, new Object[] {});
-			return result != BONDED;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+			return bd.getBondState() != BluetoothDevice.BOND_NONE;
 	}
 
 	@Override
