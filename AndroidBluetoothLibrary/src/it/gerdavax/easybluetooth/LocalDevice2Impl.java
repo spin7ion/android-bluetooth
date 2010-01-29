@@ -22,7 +22,7 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		@Override
 		public void onReceive(Context ctx, Intent intent) {
 			final String action = intent.getAction();
-			Logger.v("received "+action);
+			log.v("received "+action);
 			if (action.equals(BluetoothDevice.ACTION_FOUND)) {
 				BluetoothDevice rbd = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
@@ -64,7 +64,9 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 			}, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 			adapter.enable();
 		} else {
-			ready.ready();
+			if (ready != null) {
+				ready.notifyReady();
+			}
 		}
 	}
 
@@ -116,7 +118,7 @@ class LocalDevice2Impl extends it.gerdavax.easybluetooth.LocalDevice {
 			try {
 				// lock until socket arrives
 				BluetoothSocket bts = connection.accept(Integer.MAX_VALUE);
-				Logger.d(this, "connection unlocked");
+				log.d(this, "connection unlocked");
 				listener.notifyConnectionWaiting(new BtSocket2Impl(bts));
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -89,7 +89,8 @@ class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 				});
 				local.setEnabled(true);
 			} else {
-				ready.ready();
+				if (ready != null)
+					ready.notifyReady();
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -111,7 +112,7 @@ class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 		try {
 			local.stopScanning();
 		} catch (Exception e) {
-			Logger.e(this, "stopScan error!", e);
+			log.e(this, "stopScan error!", e);
 		}
 	}
 
@@ -153,7 +154,7 @@ class LocalDevice1Impl extends it.gerdavax.easybluetooth.LocalDevice {
 			try {
 				// lock until socket arrives
 				BluetoothSocket newSock = bs.accept(Integer.MAX_VALUE);
-				Logger.d(this, "connection unlocked");
+				log.d(this, "connection unlocked");
 				listener.notifyConnectionWaiting(new BtSocket1Impl(newSock));
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,5 +1,6 @@
 package it.gerdavax.easybluetooth;
 
+import it.gerdavax.util.Logger;
 import android.content.Context;
 import android.os.Build;
 
@@ -15,18 +16,19 @@ public abstract class LocalDevice {
 	protected ScanListener scanListener = null;
 	private static final int SDK_NUM_2_0 = 5;
 	private static LocalDevice instance = null;
+	protected static Logger log = Logger.getLogger("EASYBT");
 
 	public static synchronized LocalDevice getInstance() {
 		if (instance == null) {
 			int vInt = LocalDevice.getVersionNumber();
-			Logger.i(LocalDevice.class, "Parsed version number is " + vInt);
+			log.i(LocalDevice.class, "Parsed version number is " + vInt);
 			if (vInt < SDK_NUM_2_0) {
 				instance = new it.gerdavax.easybluetooth.LocalDevice1Impl();
 			} else {
 				instance = new it.gerdavax.easybluetooth.LocalDevice2Impl();
 			}
 		}
-		Logger.i(LocalDevice.class, "Returning: " + instance);
+		log.i(LocalDevice.class, "Returning: " + instance);
 		return instance;
 	}
 
