@@ -14,7 +14,7 @@ import android.util.Log;
  * 
  */
 public class Logger {
-	private String TAG = "BeeweebLogger";
+	private String TAG = "Logger";
 	private static int LOGLEVEL = Log.VERBOSE;
 	private static Map<String,Logger> loggers = new HashMap<String,Logger>();
 	private Logger(String tag) {
