@@ -2,7 +2,6 @@ package it.gerdavax.easybluetooth;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;

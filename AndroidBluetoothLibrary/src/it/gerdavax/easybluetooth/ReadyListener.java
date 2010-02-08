@@ -25,5 +25,10 @@ public abstract class ReadyListener {
 		delegate.sendMessage(delegate.obtainMessage(READY));
 	}
 
+	/**
+	 * Called when the device is ready for interaction. 
+	 * It could be called in a deferred way if the bluetooth adapter is still to be
+	 * set-up at initialization time
+	 */
 	public abstract void ready();
 }

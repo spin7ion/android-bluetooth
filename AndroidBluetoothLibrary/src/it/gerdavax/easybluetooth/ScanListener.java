@@ -34,7 +34,14 @@ public abstract class ScanListener {
 		delegate.sendMessage(delegate.obtainMessage(DEVICE_FOUND, tobounce));
 	}
 
+	/**
+	 * Called as soon as new remote device is found
+	 * @param tobounce the remote device object related to device just discovered
+	 */
 	public abstract void deviceFound(RemoteDevice tobounce);
 
+	/**
+	 * the scan is over. Hope you remembered the RemoteDevices passed in deviceFound() :)
+	 */
 	public abstract void scanCompleted();
 }

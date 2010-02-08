@@ -35,7 +35,10 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 
 	@Override
 	public BtSocket openSocket(UUID serviceId) throws IOException {
-		BtSocket socket = new BtSocket2Impl(bd.createRfcommSocketToServiceRecord(serviceId));
+		log.i(this,"About to open socket to UUID "+serviceId+"...");
+		BluetoothSocket bs = bd.createRfcommSocketToServiceRecord(serviceId);
+		log.i(this,"Socket to UUID "+serviceId+" open!");
+		BtSocket socket = new BtSocket2Impl(bs);
 		return socket;
 	}
 
@@ -46,10 +49,13 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 	@Override
 	public BtSocket openSocket(int port) {
 		try {
-			// connection = delegate.createRfcommSocketToServiceRecord(defaultProfile);
+			log.i(this,"About to open socket to port "+port+"...");
 			Method m = bd.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+			//throws Method-not-present or something like that exception if method is missing
 			BluetoothSocket connection = (BluetoothSocket) m.invoke(bd, port);
+			log.i(this,"About to connect socket to port "+port+"...");
 			connection.connect();
+			log.i(this,"Socket to port "+port+" open!");
 			return new BtSocket2Impl(connection);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -65,8 +71,12 @@ class RemoteDevice2Impl extends it.gerdavax.easybluetooth.RemoteDevice {
 		try {
 			if (!isBonded()) {
 				Method createBondMethod = bd.getClass().getMethod("createBond", new Class[] {});
+				log.i(this,"Asking to create bond, then PIN insert");
 				createBondMethod.invoke(bd, new Object[] {});
+				//ask to show the "insert pin" dialog
 				((LocalDevice2Impl)LocalDevice.getInstance()).showDefaultPinInputActivity(bd, true);
+			} else {
+				log.i(this,"Device is already bonded!");
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
