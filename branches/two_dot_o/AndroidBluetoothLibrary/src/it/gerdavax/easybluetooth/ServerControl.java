@@ -7,5 +7,9 @@ package it.gerdavax.easybluetooth;
  *
  */
 public interface ServerControl {
+	
+	/**
+	 * Halts the server
+	 */
 	public void halt();
 }

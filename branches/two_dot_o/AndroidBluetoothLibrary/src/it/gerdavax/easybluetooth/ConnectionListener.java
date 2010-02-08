@@ -35,6 +35,15 @@ public abstract class ConnectionListener {
 	final void notifyConnectionWaiting(BtSocket tobounce) {
 		delegate.sendMessage(delegate.obtainMessage(CONNECTION_WAITING, tobounce));
 	}
+	
+	/**
+	 * There is a new connection waiting on the server
+	 * @param socket the socket to the connecting client
+	 */
 	public abstract void connectionWaiting(BtSocket socket);
+	
+	/**
+	 * called when an error from server side connection is raised
+	 */
 	public abstract void connectionError();
 }

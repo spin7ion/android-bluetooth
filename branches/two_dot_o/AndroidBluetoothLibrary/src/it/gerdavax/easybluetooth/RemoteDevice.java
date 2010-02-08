@@ -12,18 +12,50 @@ import java.util.UUID;
  */
 public abstract class RemoteDevice {
 
+	/**
+	 * @return Bluetooth Friendly name of the remote device. Could be updated in a deferred way
+	 */
 	public abstract String getFriendlyName();
 
+	/**
+	 * @return the BDADDR of the remote device
+	 */
 	public abstract String getAddress();
 
+	/**
+	 * Opens a socket towards this remote device, given an UUID
+	 * WARNING call this only from a separate thread, since it is blocking.
+	 * Moreover, the UUID could be truncated to most significand 16 bit on 1.x platforms
+	 * @param serviceId UUID of the remote device
+	 * @return the socket just opened
+	 * @throws Exception if something goes wrong in the connection
+	 * 
+	 */
 	public abstract BtSocket openSocket(UUID serviceId ) throws Exception;
 	
+	/**
+	 * Opens a socket towards this remote device, given a network port
+	 * WARNING call this only from a separate thread, since it is blocking.
+	 * @param port the port to connect to
+	 * @return the socket just opened
+	 * @throws Exception if something goes wrong in the connection
+	 */
 	public abstract BtSocket openSocket(int port) throws Exception;
 	
+	/**
+	 * @return the RSSI level of the remote device signal. BEWARE it expressed in decibels, so logarithmic scale from -128 to 0!
+	 */
 	public abstract int getRSSI();
 	
+	/**
+	 * ensures that this device is paired with the local device. 
+	 * If it is not, attempts the pairing and show the PIN input dialog screen
+	 */
 	public abstract void ensurePaired();
 	
+	/**
+	 * base implementation: name@bdaddr of the device
+	 */
 	@Override
 	public String toString() {
 		return getFriendlyName()+"@"+getAddress();

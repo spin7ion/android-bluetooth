@@ -84,30 +84,29 @@ class RemoteDevice1Impl extends RemoteDevice {
 		return new BtSocket1Impl(rbd.openSocket(port));
 	}
 
+	/*
+	 On a certain release of a 1.6 firmware for G1, the device needed a workaround
+	 just after pairing to open-then-close connection immediately - very strange 
+	  private class G1Workaround implements Runnable {
+		public void run() {
+			try {
+				log.v("G1 workaround opening socket...");
+				BluetoothSocket bts = rbd.openSocket(1);
+				log.v("G1 workaround closing socket...");
+				bts.closeSocket();
+			} catch (BluetoothException e) {
+				log.w("G1 workaround error "+e);
+			}
+		}
+	}*/
+	
 	@Override
 	public void ensurePaired() {
 		if (!rbd.isPaired()) {
-			Thread t = new Thread() {
-				@Override
-				public void run() {
-					log.e("openedClose");
-					try {
-						rbd.openSocket(1).closeSocket();
-					} catch (BluetoothException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					log.e("openClosed");
-				}
-			};
-			t.start();
+			//HACK TODO solves problem on HTC G1 fomr T-mobile, 1.6 firmware
+			//new Thread(new G1Workaround()).start();
 			rbd.setListener(new RemoteBluetoothDeviceListener() {
 				
-				@Override
-				public void serviceChannelNotAvailable(int serviceID) {
-					// TODO Auto-generated method stub
-					
-				}
 				
 				@Override
 				public void pinRequested() {
@@ -116,17 +115,17 @@ class RemoteDevice1Impl extends RemoteDevice {
 				
 				@Override
 				public void paired() {
-					log.e("paired()");
+					log.i("paired()");
 				}
 				
 				@Override
-				public void gotServiceChannel(int serviceID, int channel) {
-					// TODO Auto-generated method stub
-					
-				}
+				public void serviceChannelNotAvailable(int serviceID) {}
+				
+				
+				@Override
+				public void gotServiceChannel(int serviceID, int channel) {}
 			});
 			rbd.pair();
-			
 		}
 	}
 }
