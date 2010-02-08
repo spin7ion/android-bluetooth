@@ -31,6 +31,10 @@ public class Logger {
 		return toRet;
 	}
 	
+	public synchronized static Logger getLogger() {
+		return getLogger("LOG");
+	} 
+	
 	public static void setLogLevel(int newLev) {
 		if (Log.VERBOSE <= newLev && newLev <= Log.ASSERT) {
 			LOGLEVEL = newLev;
