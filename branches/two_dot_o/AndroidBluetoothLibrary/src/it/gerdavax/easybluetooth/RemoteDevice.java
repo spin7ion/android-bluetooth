@@ -47,12 +47,14 @@ public abstract class RemoteDevice {
 	 */
 	public abstract int getRSSI();
 	
+	public void ensurePaired() {
+		ensurePaired(null);
+	}
 	/**
-	 * ensures that this device is paired with the local device. 
-	 * If it is not, attempts the pairing and show the PIN input dialog screen
+	 * ensures that this device is paired with the local device with the given pin.
+	 * If called with null and is not paired, attempts the pairing and show the PIN input dialog screen
 	 */
-	public abstract void ensurePaired();
-	
+	public abstract void ensurePaired(String pin);
 	/**
 	 * base implementation: name@bdaddr of the device
 	 */

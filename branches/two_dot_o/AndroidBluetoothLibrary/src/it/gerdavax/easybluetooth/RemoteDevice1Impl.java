@@ -9,7 +9,7 @@ import it.gerdavax.util.Logger;
 import java.util.UUID;
 
 class RemoteDevice1Impl extends RemoteDevice {
-	
+
 	private RemoteBluetoothDevice rbd = null;
 	private final Logger log = Logger.getLogger("EASYBT");
 
@@ -85,47 +85,43 @@ class RemoteDevice1Impl extends RemoteDevice {
 	}
 
 	/*
-	 On a certain release of a 1.6 firmware for G1, the device needed a workaround
-	 just after pairing to open-then-close connection immediately - very strange 
-	  private class G1Workaround implements Runnable {
-		public void run() {
-			try {
-				log.v("G1 workaround opening socket...");
-				BluetoothSocket bts = rbd.openSocket(1);
-				log.v("G1 workaround closing socket...");
-				bts.closeSocket();
-			} catch (BluetoothException e) {
-				log.w("G1 workaround error "+e);
-			}
-		}
-	}*/
-	
+	 * On a certain release of a 1.6 firmware for G1, the device needed a workaround just after pairing to
+	 * open-then-close connection immediately - very strange private class G1Workaround implements Runnable { public
+	 * void run() { try { log.v("G1 workaround opening socket..."); BluetoothSocket bts = rbd.openSocket(1);
+	 * log.v("G1 workaround closing socket..."); bts.closeSocket(); } catch (BluetoothException e) {
+	 * log.w("G1 workaround error "+e); } } }
+	 */
+
 	@Override
-	public void ensurePaired() {
+	public void ensurePaired(String pin) {
 		if (!rbd.isPaired()) {
-			//HACK TODO solves problem on HTC G1 fomr T-mobile, 1.6 firmware
-			//new Thread(new G1Workaround()).start();
+			// HACK TODO solves problem on HTC G1 fomr T-mobile, 1.6 firmware
+			// new Thread(new G1Workaround()).start();
 			rbd.setListener(new RemoteBluetoothDeviceListener() {
-				
-				
+
 				@Override
 				public void pinRequested() {
 					LocalBluetoothDevice.getLocalDevice().showDefaultPinInputActivity(getAddress(), true);
 				}
-				
+
 				@Override
 				public void paired() {
 					log.i("paired()");
 				}
-				
+
 				@Override
-				public void serviceChannelNotAvailable(int serviceID) {}
-				
-				
+				public void serviceChannelNotAvailable(int serviceID) {
+				}
+
 				@Override
-				public void gotServiceChannel(int serviceID, int channel) {}
+				public void gotServiceChannel(int serviceID, int channel) {
+				}
 			});
-			rbd.pair();
+			if (pin == null) {
+				rbd.pair();
+			} else {
+				rbd.pair(pin);
+			}
 		}
 	}
 }
