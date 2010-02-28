@@ -47,7 +47,7 @@ public abstract class RemoteDevice {
 	 */
 	public abstract int getRSSI();
 	
-	public void ensurePaired() {
+	public final void ensurePaired() {
 		ensurePaired(null);
 	}
 	/**
